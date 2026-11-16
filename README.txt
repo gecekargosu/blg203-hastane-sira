@@ -76,7 +76,7 @@ Yeniden uretmek icin: python veri/veri_uret.py
 ------------------------------------------------------------------------
 kaynak_kod/   12 kaynak dosya (derlenmis dosya yoktur)
 veri/         test verileri ve veri ureteci
-03_Olcum/     benchmark.csv, deneysel olcum ciktisi
+olcum/        benchmark.csv, deneysel olcum ciktisi (klasorde 03_Olcum)
 00_Kapak/     rapor, UML ve ekran goruntusu uretecleri
 Rapor.pdf               ara rapor (10 sayfa)
 UML.pdf                 UML yapi diyagrami (1 sayfa)
