@@ -70,6 +70,57 @@ def grafik_html(veri):
     return "\n".join(parcalar)
 
 
+def grafik_ekleme_html(veri):
+    """Ekleme surelerini dogrusal olcekte karsilastirir."""
+    en_buyuk = max(max(v["ek_liste"], v["ek_agac"]) for v in veri)
+
+    def genislik(deger):
+        return max(1.0, min(100.0, deger / en_buyuk * 100.0))
+
+    parcalar = []
+    for v in veri:
+        parcalar.append(
+            '<div class="grafik-satir">'
+            '<div class="grafik-etiket">%s hasta</div>'
+            '<div class="grafik-cubuklar">'
+            '<div class="cubuk-satir"><div class="cubuk liste" style="width:%.1f%%"></div>'
+            '<span class="deger">bagli liste %.2f ms</span></div>'
+            '<div class="cubuk-satir"><div class="cubuk agac" style="width:%.1f%%"></div>'
+            '<span class="deger">agac %.2f ms</span></div>'
+            '</div></div>'
+            % (v["boyut"], genislik(v["ek_liste"]), v["ek_liste"],
+               genislik(v["ek_agac"]), v["ek_agac"]))
+    return "\n".join(parcalar)
+
+
+def grafik_yukseklik_html(veri):
+    """Olculen agac yuksekligini dengeli agac beklentisiyle karsilastirir."""
+    satirlar = []
+    for v in veri:
+        n = int(v["boyut"])
+        olculen = int(v["yukseklik"])
+        ideal = math.ceil(math.log2(n + 1))
+        satirlar.append((v["boyut"], olculen, ideal))
+    en_buyuk = max(max(o, i) for _, o, i in satirlar)
+
+    def genislik(deger):
+        return max(1.0, min(100.0, deger / en_buyuk * 100.0))
+
+    parcalar = []
+    for boyut, olculen, ideal in satirlar:
+        parcalar.append(
+            '<div class="grafik-satir">'
+            '<div class="grafik-etiket">%s hasta</div>'
+            '<div class="grafik-cubuklar">'
+            '<div class="cubuk-satir"><div class="cubuk liste" style="width:%.1f%%"></div>'
+            '<span class="deger">olculen yukseklik %d</span></div>'
+            '<div class="cubuk-satir"><div class="cubuk agac" style="width:%.1f%%"></div>'
+            '<span class="deger">dengeli agac beklentisi %d</span></div>'
+            '</div></div>'
+            % (boyut, genislik(olculen), olculen, genislik(ideal), ideal))
+    return "\n".join(parcalar)
+
+
 CSS = """
 @page { size: A4; margin: 2.1cm 2.0cm 2.4cm 2.0cm; }
 * { box-sizing: border-box; }
@@ -104,6 +155,10 @@ figcaption { font-size: 9pt; color: #333; margin-top: 3pt; text-align: center; }
 .cubuk.liste { background: #a33; }
 .cubuk.agac { background: #1f4e79; }
 .cubuk span { font-family: Arial, sans-serif; }
+.cubuk-satir { display: flex; align-items: center; margin: 1.5pt 0; }
+.cubuk-satir .cubuk { height: 10pt; margin: 0; padding: 0; }
+.deger { font-family: Arial, sans-serif; font-size: 8pt; color: #222;
+         margin-left: 4pt; white-space: nowrap; }
 
 /* Kapak */
 .kapak { text-align: center; page-break-after: always; height: 24.5cm; position: relative; }
@@ -208,9 +263,11 @@ hem de ölçümleri doğrudan etkilediği için açıkça yazılmıştır.</p>
 
 <h1>2. Yönergedeki Zorunlu Gereksinimler ve Durum</h1>
 
-<p>Yönergenin üçüncü bölümünde altı zorunlu teknik gereksinim sayılmıştır. Genel kuralların
-birincisinde yer alan hazır kütüphane yasağı da denetim kolaylığı için tabloya yedinci satır
-olarak eklenmiştir. Bu gereksinimlerin
+<p>Yönergenin üçüncü bölümünde altı zorunlu teknik gereksinim sayılmıştır. Aynı yönergenin
+teslim öncesi kontrol listesi bu sayıyı yedi olarak verir, çünkü genel kuralların ikincisindeki
+bellek yönetimi şartı da zorunlu kalem sayılır. Hazır kütüphane yasağı (genel kural 1) da
+denetim kolaylığı için tabloya eklendi. Böylece tabloda sekiz satır var: altı gereksinim,
+bellek yönetimi ve sıfırdan gerçekleme. Bu gereksinimlerin
 bir kısmı nesne yönelimli diller için yazılmış örneklerle anlatıldığından, C dilinde aynı
 etkinin nasıl kurulacağı da tabloda belirtilmiştir. Ara rapor aşamasında çekirdek yapılar
 çalışır durumdadır, nesne yönelimli karşılıklar final sürümünde tamamlanacaktır.</p>
@@ -236,7 +293,10 @@ etkinin nasıl kurulacağı da tabloda belirtilmiştir. Ara rapor aşamasında �
 <tr><td>6</td><td>UML sınıf diyagramı</td>
     <td>Yapı, modül ve bağımlılık diyagramı</td>
     <td><b>Karşılandı.</b> UML.pdf dosyasında</td></tr>
-<tr><td>7</td><td>Veri yapılarının sıfırdan yazılması</td>
+<tr><td>7</td><td>Bellek yönetimi (genel kural 2)</td>
+    <td>malloc ve free, düğüm bazlı yapılar, kapanışta serbest bırakma</td>
+    <td><b>Karşılandı.</b> Bağlayıcı sarmalamasıyla sayıldı, kayıt sayısıyla büyüyen fark yok</td></tr>
+<tr><td>8</td><td>Veri yapılarının sıfırdan yazılması</td>
     <td>Hazır kütüphane yok, yalnızca stdio, stdlib ve string</td>
     <td><b>Karşılandı.</b> Beş yapı da elle gerçeklendi</td></tr>
 </table>
@@ -451,6 +511,9 @@ listeye hem ikili arama ağacına verilmiş, süreler <code>timespec_get</code> 
 altı çözünürlükte alınmıştır. Anahtarlar sıralı olmadığı için ağaç dengeli kalır. Ölçüm
 ortamı Windows 11, AMD64, gcc 16.2.0, -O2 iyileştirmesi.</p>
 
+<p>Şekil 1 arama sürelerini logaritmik ölçekte, Şekil 2 ekleme sürelerini doğrusal ölçekte
+karşılaştırır. Şekil 3 ise ölçülen ağaç yüksekliğini dengeli ağaç beklentisiyle yan yana koyar.</p>
+
 <table>
 <tr><th>Hasta sayısı</th><th>Ekleme liste (ms)</th><th>Ekleme ağaç (ms)</th>
     <th>Arama liste (ms)</th><th>Arama ağaç (ms)</th><th>Ağaç yüksekliği</th><th>Hız oranı</th></tr>
@@ -462,6 +525,18 @@ ortamı Windows 11, AMD64, gcc 16.2.0, -O2 iyileştirmesi.</p>
 </div>
 <p class="kucuk">Şekil 1. Arama sürelerinin hasta sayısına göre değişimi, yatay eksen
 logaritmik ölçekte.</p>
+
+<div class="grafik">
+%(grafik_ekleme)s
+</div>
+<p class="kucuk">Şekil 2. Ekleme süreleri. Bağlı liste sona ekleme yaptığı için sabit zamanda
+ilerler, ağaç her düğüm için ayrı bellek ayırır. Yatay eksen doğrusal.</p>
+
+<div class="grafik">
+%(grafik_yukseklik)s
+</div>
+<p class="kucuk">Şekil 3. Ölçülen ağaç yüksekliği ile dengeli bir ağaç için beklenen yükseklik
+(log2(n+1)). Fark, anahtar dağılımının tam dengeli olmamasından gelir.</p>
 
 <p>Sonuçlar teorik beklentiyle uyumludur. Hasta sayısı yüz kat artarken bağlı listede arama
 süresi yaklaşık 28 600 katına çıkmıştır, çünkü her arama tüm listeyi baştan taramakta ve
@@ -482,14 +557,14 @@ verilmiştir.</p>
 <h1>7. Ekran Çıktıları</h1>
 
 <figure><img src="%(ekran1)s">
-<figcaption>Şekil 2. Açılış, numaraya göre hasta arama ve ağaç üzerinden sıralı listeleme</figcaption></figure>
+<figcaption>Şekil 4. Açılış, numaraya göre hasta arama ve ağaç üzerinden sıralı listeleme</figcaption></figure>
 
 <figure><img src="%(ekran2)s">
-<figcaption>Şekil 3. Üç hastanın muayene sırasına alınması ve ilk gelen ilk çıkar sırasıyla
+<figcaption>Şekil 5. Üç hastanın muayene sırasına alınması ve ilk gelen ilk çıkar sırasıyla
 çağrılması</figcaption></figure>
 
 <figure><img src="%(ekran3)s">
-<figcaption>Şekil 4. İkili arama ağacının ekrana yatay çizimi ve dairesel poliklinik turu</figcaption></figure>
+<figcaption>Şekil 6. İkili arama ağacının ekrana yatay çizimi ve dairesel poliklinik turu</figcaption></figure>
 
 <h1>8. Test Senaryoları</h1>
 
@@ -651,6 +726,8 @@ def rapor_uret():
         "logo": "file:///" + os.path.join(KOK, "00_Kapak", "assets", "logo.png").replace("\\", "/"),
         "tablo": tablo_html(veri),
         "grafik": grafik_html(veri),
+        "grafik_ekleme": grafik_ekleme_html(veri),
+        "grafik_yukseklik": grafik_yukseklik_html(veri),
         "ekran1": "file:///" + os.path.join(KOK, "00_Kapak", "ekran", "ekran1.png").replace("\\", "/"),
         "ekran2": "file:///" + os.path.join(KOK, "00_Kapak", "ekran", "ekran2.png").replace("\\", "/"),
         "ekran3": "file:///" + os.path.join(KOK, "00_Kapak", "ekran", "ekran3.png").replace("\\", "/"),

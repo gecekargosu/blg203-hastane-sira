@@ -76,7 +76,7 @@ Bildirimde olmayan ama eklenen yapılar: ikili arama ağacı (arama performansı
 
 | # | Kalem | Durum | Kanıt |
 |---|-------|-------|-------|
-| 1 | Görselleştirme (ağacın ekrana çizilmesi) | **VAR** | Menü 10, `agac_ciz`, Şekil 4 |
+| 1 | Görselleştirme (ağacın ekrana çizilmesi) | **VAR** | Menü 10, `agac_ciz`, Şekil 6 |
 | 2 | AVL / Trie gibi ileri yapı | FINAL | 9–10. hafta |
 | 3 | İkiden fazla sıralama algoritması | FINAL | 11. hafta |
 | 4 | Git/GitHub, düzenli commit | **KISMEN** | Yerel depo kuruldu, 1 commit. GitHub'a gönderme komutu `04_...` dosyasında |

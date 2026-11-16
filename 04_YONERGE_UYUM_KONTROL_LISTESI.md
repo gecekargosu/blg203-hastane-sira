@@ -62,7 +62,7 @@ Son güncelleme: 16 Kasım 2026 (ara teslim)
 
 | # | Kalem | Durum | Kanıt |
 |---|-------|-------|-------|
-| 1 | Veri yapılarının görselleştirilmesi (ağacın ekrana çizilmesi) | **VAR** | Menü 10, `agac_ciz`, Şekil 4 |
+| 1 | Veri yapılarının görselleştirilmesi (ağacın ekrana çizilmesi) | **VAR** | Menü 10, `agac_ciz`, Şekil 6 |
 | 2 | Dengeli ağaç (AVL) veya Trie gibi ileri yapı | FINAL | 12. bölüm planı, 9–10. hafta |
 | 3 | İkiden fazla sıralama algoritmasının karşılaştırılması | FINAL | 11. hafta planı |
 | 4 | Sürüm kontrolü (Git/GitHub) ve düzenli commit geçmişi | **KISMEN** | Yerel git deposu kuruldu, commit geçmişi başlatıldı. GitHub'a gönderme komutu aşağıda |
