@@ -17,7 +17,7 @@ Son güncelleme: 16 Kasım 2026 (ara teslim)
 | 2 | Düğüm tabanlı yapılar işaretçi ve dinamik bellek ile kurulmalı, bellek serbest bırakılmalı | VAR | `malloc`/`free` eşleşmesi tam. Kapanışta `yigit_serbest`, `kuyruk_serbest`, `poliklinik_serbest`, `agac_serbest`, `kayit_serbest` sırayla çağrılıyor |
 | 3 | Menü tabanlı konsol uygulaması | VAR | 12 seçenekli menü, `main.c` |
 | 4 | Veri en az bir dosyadan okunmalı, en az 1000 kayıt | VAR | `veri/hastalar.csv` 1200 kayıt, `dosya.c` ile okunuyor |
-| 5 | Anlamlı isimler, açıklama satırları, modüler yapı | VAR | 7 modül (12 dosya), her işlevin başında Türkçe açıklama |
+| 5 | Anlamlı isimler, açıklama satırları, modüler yapı | VAR | 7 modül (13 dosya), her işlevin başında Türkçe açıklama |
 
 ## 2. Zorunlu Teknik Gereksinimler (Yönerge Bölüm 3)
 
@@ -38,7 +38,7 @@ Son güncelleme: 16 Kasım 2026 (ara teslim)
 | # | Beklenen | Durum | Yer |
 |---|----------|-------|-----|
 | 1 | Problem tanımı ve kullanılacak veri yapıları listesi, her birinin görevi (1–2 sayfa) | VAR | Rapor 1 ve 3. bölüm |
-| 2 | Temel işlemleri (ekleme, silme, arama) içeren çalışan ilk sürüm | VAR | 12 kaynak dosya, derleme 0 uyarı, menü uçtan uca test edildi |
+| 2 | Temel işlemleri (ekleme, silme, arama) içeren çalışan ilk sürüm | VAR | 13 kaynak dosya, derleme 0 uyarı, menü uçtan uca test edildi |
 | 3 | Kalan işler ve iş bölümü planı | VAR | Rapor 10 ve 12. bölüm |
 
 ## 4. Rapor Yapısı (Yönerge Bölüm 5)

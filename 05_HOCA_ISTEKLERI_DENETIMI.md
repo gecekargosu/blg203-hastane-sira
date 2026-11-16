@@ -31,7 +31,7 @@ Bildirimde olmayan ama eklenen yapılar: ikili arama ağacı (arama performansı
 | # | İstenen | Durum | Kanıt |
 |---|---------|-------|-------|
 | 1 | Problem tanımı + veri yapıları listesi ve görevleri (1–2 sayfa) | **VAR** | `Rapor.pdf`, 1. ve 3. bölüm (3 sayfaya yakın) |
-| 2 | Temel işlemleri içeren çalışan ilk sürüm | **VAR** | 12 kaynak dosya, `-Wall -Wextra` ile 0 uyarı, menü uçtan uca test edildi |
+| 2 | Temel işlemleri içeren çalışan ilk sürüm | **VAR** | 13 kaynak dosya, `-Wall -Wextra` ile 0 uyarı, menü uçtan uca test edildi |
 | 3 | Kalan işler ve iş bölümü planı | **VAR** | 10. ve 12. bölüm, 8 maddelik plan tablosu |
 
 ---

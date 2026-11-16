@@ -67,13 +67,16 @@ def uret():
                 ["+ tc : int", "+ ad : char[64]", "+ yas : int",
                  "+ poliklinik : char[48]", "+ durum : int", "+ sonraki : Hasta*"],
                 ["+ kayit_ekle(...) : Hasta*", "+ kayit_sil(...) : Hasta*",
-                 "+ kayit_ara(bas, tc) : Hasta*"])
+                 "+ kayit_ara(bas, tc) : Hasta*", "+ kayit_listele(bas)",
+                 "+ kayit_say(bas) : int", "+ kayit_serbest(bas)"])
     parcalar.append(k)
 
     # 2) Kuyruk
     k, h2 = kutu(40, 330, "Kuyruk",
                  ["+ on : Bekleyen*", "+ arka : Bekleyen*", "+ adet : int"],
-                 ["+ kuyruk_ekle(k, tc, ad)", "+ kuyruk_cikar(k) : int"])
+                 ["+ kuyruk_baslat(k)", "+ kuyruk_ekle(k, tc, ad)",
+                  "+ kuyruk_cikar(k) : int", "+ kuyruk_listele(k)",
+                  "+ kuyruk_serbest(k)"])
     parcalar.append(k)
 
     # 3) Bekleyen
@@ -85,24 +88,36 @@ def uret():
     k, h4 = kutu(730, 330, "AgacDugum",
                  ["+ hasta : Hasta*", "+ sol : AgacDugum*", "+ sag : AgacDugum*"],
                  ["+ agac_ekle(...) : AgacDugum*", "+ agac_ara(kok, tc)",
-                  "+ agac_sil(kok, tc)"])
+                  "+ agac_sil(kok, tc)", "+ agac_sirali(kok)",
+                  "+ agac_ciz(kok)", "+ agac_yukseklik(kok) : int",
+                  "+ agac_dugum_say(kok) : int", "+ agac_serbest(kok)"])
     parcalar.append(k)
 
     # 5) Islem (yigit)
     k, h5 = kutu(40, 560, "Islem  (yigit dugumu)",
                  ["+ tur : IslemTuru", "+ yedek : Hasta", "+ sonraki : Islem*"],
-                 ["+ yigit_ekle(...) : Islem*", "+ yigit_al(tepe) : Islem*"])
+                 ["+ yigit_ekle(...) : Islem*", "+ yigit_al(tepe) : Islem*",
+                  "+ yigit_bos(tepe) : int", "+ yigit_serbest(tepe)"])
     parcalar.append(k)
 
     # 6) Poliklinik (dairesel)
     k, h6 = kutu(730, 560, "Poliklinik  (dairesel dugum)",
                  ["+ kod : int", "+ ad : char[40]", "+ sonraki : Poliklinik*"],
-                 ["+ poliklinik_ekle(...)", "+ poliklinik_ilerle(son)"])
+                 ["+ poliklinik_ekle(...)", "+ poliklinik_ilerle(son)",
+                  "+ poliklinik_listele(son)", "+ poliklinik_say(son) : int",
+                  "+ poliklinik_serbest(son)"])
+    parcalar.append(k)
+
+    # 7) dosya.c ve main.c akis islevleri
+    k, h7 = kutu(390, 555, "dosya.c ve main.c  (akis islevleri)", [],
+                 ["+ dosya_oku(...) : int", "+ dosya_yaz(...) : int",
+                  "+ hasta_ekle_akis(...)", "+ hasta_sil_akis(...)",
+                  "+ benchmark(...)"])
     parcalar.append(k)
 
     # Iliskiler
     parcalar.append(ok(320, 375, 386, 375, "1..*  bekleyen", etiket_x=300, etiket_y=368))
-    parcalar.append(ok(520, 330, 520, 250, "tc ile basvuru", kesik=True, etiket_x=524, etiket_y=298))
+    parcalar.append(ok(520, 330, 520, 262, "tc ile basvuru", kesik=True, etiket_x=524, etiket_y=298))
     parcalar.append(ok(820, 330, 720, 250, "1 hasta (isaretci)", etiket_x=740, etiket_y=300))
     parcalar.append(ok(40, 600, 18, 600, ""))
     parcalar.append('<path d="M 40 600 L 18 600 L 18 60 L 386 60" stroke="#7a1f1f" '

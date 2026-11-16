@@ -74,7 +74,7 @@ Yeniden uretmek icin: python veri/veri_uret.py
 ------------------------------------------------------------------------
 6. DOSYA DUZENI
 ------------------------------------------------------------------------
-kaynak_kod/   12 kaynak dosya (derlenmis dosya yoktur)
+kaynak_kod/   13 kaynak dosya, 7 .c ve 6 .h (derlenmis dosya yoktur)
 veri/         test verileri ve veri ureteci
 olcum/        benchmark.csv, deneysel olcum ciktisi (klasorde 03_Olcum)
 00_Kapak/     rapor, UML ve ekran goruntusu uretecleri

@@ -208,7 +208,9 @@ hem de ölçümleri doğrudan etkilediği için açıkça yazılmıştır.</p>
 
 <h1>2. Yönergedeki Zorunlu Gereksinimler ve Durum</h1>
 
-<p>Yönergenin üçüncü bölümünde yedi zorunlu teknik gereksinim sayılmıştır. Bu gereksinimlerin
+<p>Yönergenin üçüncü bölümünde altı zorunlu teknik gereksinim sayılmıştır. Genel kuralların
+birincisinde yer alan hazır kütüphane yasağı da denetim kolaylığı için tabloya yedinci satır
+olarak eklenmiştir. Bu gereksinimlerin
 bir kısmı nesne yönelimli diller için yazılmış örneklerle anlatıldığından, C dilinde aynı
 etkinin nasıl kurulacağı da tabloda belirtilmiştir. Ara rapor aşamasında çekirdek yapılar
 çalışır durumdadır, nesne yönelimli karşılıklar final sürümünde tamamlanacaktır.</p>
@@ -621,7 +623,7 @@ bulunmaz.</p>
 
 <table>
 <tr><th style="width:34%%">Paketteki öğe</th><th>İçerik</th></tr>
-<tr><td>kaynak_kod/</td><td>12 kaynak dosya (.c ve .h), derlenmiş dosya içermez</td></tr>
+<tr><td>kaynak_kod/</td><td>13 kaynak dosya (7 .c ve 6 .h), derlenmiş dosya içermez</td></tr>
 <tr><td>veri/</td><td>hastalar.csv (1200 kayıt), demo_hastalar.csv (12 kayıt), veri üreteci</td></tr>
 <tr><td>olcum/</td><td>benchmark.csv, deneysel ölçüm çıktısı</td></tr>
 <tr><td>README.txt</td><td>Derleme, çalıştırma, menü ve veri biçimi açıklaması</td></tr>
