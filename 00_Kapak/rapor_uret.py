@@ -421,9 +421,9 @@ GERI_AL(yigit):
     eger islem.tur == EKLE: listeden sil, agactan sil
     yoksa: kaydi listeden ve agactan geri ekle</pre>
 
-<h1>5. Karmaşıklık Analizi</h1>
+<h1>5. Karmaşıklık (Big-O) Analizi</h1>
 
-<p>Aşağıdaki tabloda her işlemin zaman ve bellek karmaşıklığı verilmiştir. Ağaç sütununda
+<p>Aşağıdaki tabloda her işlemin zaman ve bellek karmaşıklığı Big-O gösterimiyle verilmiştir. Ağaç sütununda
 ortalama durum dengeli bir ağaç varsayımıyla, kötü durum ise sıralı veriyle zincire dönmüş
 ağaç için verilmiştir. Bellek sütunu, yapının kaç kayıt kadar ek yer tuttuğunu gösterir.</p>
 
