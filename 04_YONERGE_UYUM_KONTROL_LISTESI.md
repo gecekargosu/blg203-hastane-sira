@@ -3,7 +3,7 @@
 Proje: **Hastane Hasta Sıra ve Bekleme Sistemi**
 Öğrenci: Cengiz Kılıç — 251205027
 Belge: `BLG203_Veri_Yapilari_Donem_Projesi_Yonergesi.docx` maddelerinin tek tek karşılanma durumu.
-Son güncelleme: 16 Kasım 2026 (tur 5, ara teslim)
+Son güncelleme: 16 Kasım 2026 (tur 6, ara teslim)
 
 İşaretler: **VAR** karşılandı · **KISMEN** ara sürümde karşılandı, finalde tamamlanacak · **FINAL** final tesliminde yapılacak (ara raporda zorunlu değil)
 

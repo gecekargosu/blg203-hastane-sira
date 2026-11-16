@@ -288,7 +288,7 @@ etkinin nasıl kurulacağı da tabloda belirtilmiştir. Ara rapor aşamasında �
     <td>Yalnızca fonksiyon işaretçisi içeren yapı ve onu dolduran kayıtlar</td>
     <td>Planlandı. Raporlama modülü bu arayüzü uygulayacak</td></tr>
 <tr><td>5</td><td>Dosya okuma ve yazma</td>
-    <td>fopen, fgets, strtok ve fprintf ile CSV benzeri metin dosyası</td>
+    <td>fopen, fgets, elle alan ayırma ve fprintf ile CSV benzeri metin dosyası</td>
     <td><b>Karşılandı.</b> 1200 kayıt okunuyor, kapanışta geri yazılıyor</td></tr>
 <tr><td>6</td><td>UML sınıf diyagramı</td>
     <td>Yapı, modül ve bağımlılık diyagramı</td>
