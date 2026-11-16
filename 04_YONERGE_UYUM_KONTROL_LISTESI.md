@@ -28,7 +28,7 @@ Son güncelleme: 16 Kasım 2026 (ara teslim)
 | 3 | Soyut sınıf | FINAL | Gövdesiz işaretçilerden oluşan taban yapı |
 | 4 | Arayüz | FINAL | `Raporlanabilir` karşılığı işaretçi tablosu |
 | 5 | Dosya okuma/yazma | VAR | Açılışta okuma, kapanışta yazma, dosya yoksa uyarı ve çökmeme |
-| 6 | UML sınıf diyagramı | VAR | `02_UML_Diyagrami.pdf`, 6 yapı, alanlar, işlevler, ilişkiler |
+| 6 | UML sınıf diyagramı | VAR | `UML.pdf`, 6 yapı, alanlar, işlevler, ilişkiler |
 | 7 | Yapıların gerçek görevi olması | VAR | Her yapı bir iş akışı adımını karşılıyor, bölüm 3'te gerekçeli |
 
 > Not: Yönergede 3. bölüm nesne yönelimli örneklerle (kalıtım, arayüz) yazılmış, dil ise C olarak belirtilmiş. Raporda bu gereksinimlerin C karşılıkları tablo hâlinde açıklandı.

@@ -16,7 +16,7 @@ from reportlab.pdfgen import canvas
 CHROME = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
 KOK = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 GECICI_PDF = os.path.join(tempfile.gettempdir(), "blg203_hastane_ham.pdf")
-HEDEF_PDF = os.path.join(KOK, "01_Ara_Rapor.pdf")
+HEDEF_PDF = os.path.join(KOK, "Rapor.pdf")
 
 BASLIK = "BLG203 Veri Yapıları Dönem Projesi  |  Cengiz Kılıç 251205027  |  Hastane Hasta Sıra ve Bekleme Sistemi"
 
@@ -140,6 +140,7 @@ HTML = """<!doctype html>
     <tr><td class="b">Öğrenci</td><td>Cengiz Kılıç</td></tr>
     <tr><td class="b">Öğrenci Numarası</td><td>251205027</td></tr>
     <tr><td class="b">Bölüm</td><td>Yapay Zekâ ve Makine Öğrenmesi</td></tr>
+    <tr><td class="b">Grup No</td><td>— (bireysel proje)</td></tr>
     <tr><td class="b">Proje Türü</td><td>Bireysel proje</td></tr>
     <tr><td class="b">Programlama Dili</td><td>C (C11)</td></tr>
     <tr><td class="b">Teslim Tarihi</td><td>16 Kasım 2026</td></tr>
@@ -232,7 +233,7 @@ etkinin nasıl kurulacağı da tabloda belirtilmiştir. Ara rapor aşamasında �
     <td><b>Karşılandı.</b> 1200 kayıt okunuyor, kapanışta geri yazılıyor</td></tr>
 <tr><td>6</td><td>UML sınıf diyagramı</td>
     <td>Yapı, modül ve bağımlılık diyagramı</td>
-    <td><b>Karşılandı.</b> 02_UML_Diyagrami.pdf dosyasında</td></tr>
+    <td><b>Karşılandı.</b> UML.pdf dosyasında</td></tr>
 <tr><td>7</td><td>Veri yapılarının sıfırdan yazılması</td>
     <td>Hazır kütüphane yok, yalnızca stdio, stdlib ve string</td>
     <td><b>Karşılandı.</b> Beş yapı da elle gerçeklendi</td></tr>

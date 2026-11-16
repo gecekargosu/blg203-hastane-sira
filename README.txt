@@ -78,8 +78,8 @@ kaynak_kod/   12 kaynak dosya (derlenmis dosya yoktur)
 veri/         test verileri ve veri ureteci
 03_Olcum/     benchmark.csv, deneysel olcum ciktisi
 00_Kapak/     rapor, UML ve ekran goruntusu uretecleri
-01_Ara_Rapor.pdf        ara rapor (10 sayfa)
-02_UML_Diyagrami.pdf    UML yapi diyagrami
+Rapor.pdf               ara rapor (10 sayfa)
+UML.pdf                 UML yapi diyagrami (1 sayfa)
 04_YONERGE_UYUM_KONTROL_LISTESI.md  yonerge madde madde kontrol
 
 ------------------------------------------------------------------------

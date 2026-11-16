@@ -30,7 +30,7 @@ Bildirimde olmayan ama eklenen yapılar: ikili arama ağacı (arama performansı
 
 | # | İstenen | Durum | Kanıt |
 |---|---------|-------|-------|
-| 1 | Problem tanımı + veri yapıları listesi ve görevleri (1–2 sayfa) | **VAR** | `01_Ara_Rapor.pdf`, 1. ve 3. bölüm (3 sayfaya yakın) |
+| 1 | Problem tanımı + veri yapıları listesi ve görevleri (1–2 sayfa) | **VAR** | `Rapor.pdf`, 1. ve 3. bölüm (3 sayfaya yakın) |
 | 2 | Temel işlemleri içeren çalışan ilk sürüm | **VAR** | 12 kaynak dosya, `-Wall -Wextra` ile 0 uyarı, menü uçtan uca test edildi |
 | 3 | Kalan işler ve iş bölümü planı | **VAR** | 10. ve 12. bölüm, 8 maddelik plan tablosu |
 
@@ -47,7 +47,7 @@ Bildirimde olmayan ama eklenen yapılar: ikili arama ağacı (arama performansı
 | 3 | Soyut sınıf | FINAL | Gövdesiz işaretçi tablosu + NULL denetimi |
 | 4 | Arayüz | FINAL | `Raporlanabilir` karşılığı işaretçi yapısı |
 | 5 | Dosya okuma/yazma | **VAR** | `dosya.c`, 1200 kayıt okunuyor, kapanışta yazılıyor, dosya yoksa uyarı |
-| 6 | UML sınıf diyagramı | **VAR** | `02_UML_Diyagrami.pdf`, 6 yapı, alanlar, işlevler, ilişkiler, tek sayfa |
+| 6 | UML sınıf diyagramı | **VAR** | `UML.pdf`, 6 yapı, alanlar, işlevler, ilişkiler, tek sayfa |
 | 7 | Yapıların sıfırdan yazılması | **VAR** | Yalnızca `stdio.h`, `stdlib.h`, `string.h`, `time.h` |
 
 **Skor: 3 tam, 4 finalde.** Bu dört madde C dilinde yapay durmaması için finalde hasta türleri (ayakta/yatan) üzerinden kurulacak, plan 12. bölümde.

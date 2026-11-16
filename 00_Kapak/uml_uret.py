@@ -9,7 +9,7 @@ import tempfile
 
 CHROME = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
 KOK = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-HEDEF = os.path.join(KOK, "02_UML_Diyagrami.pdf")
+HEDEF = os.path.join(KOK, "UML.pdf")
 
 KUTU_GENISLIK = 330
 SATIR_YUKSEKLIK = 15
