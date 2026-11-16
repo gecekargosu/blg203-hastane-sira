@@ -32,6 +32,10 @@ static Hasta *hasta_ekle_akis(Hasta *kayitlar, AgacDugum **agac, Islem **yigit);
 static Hasta *hasta_sil_akis(Hasta *kayitlar, AgacDugum **agac, Islem **yigit);
 static void benchmark(void);
 
+/* Girdi akisi bittiginde 1 olur. Menu dongusu bu bayragi gorup
+   sonsuz donguye girmeden kayitlari yazip temiz kapanir. */
+static int girdi_bitti = 0;
+
 int main(int argc, char **argv) {
     Hasta *kayitlar = NULL;
     AgacDugum *agac = NULL;
@@ -72,6 +76,10 @@ int main(int argc, char **argv) {
         int secim = 0;
         menuyu_yaz();
         if (!sayi_oku("Seciminiz: ", &secim)) {
+            if (girdi_bitti) {
+                printf("Giris akisi bitti, kayitlar dosyaya yazilip cikiliyor.\n");
+                break;
+            }
             printf("Gecersiz giris. Menudeki bir numarayi girin.\n");
             continue;
         }
@@ -259,6 +267,7 @@ static int sayi_oku(const char *soru, int *hedef) {
 
     printf("%s", soru);
     if (fgets(satir, GIRDI_UZUNLUK, stdin) == NULL) {
+        girdi_bitti = 1;
         return 0;
     }
     long deger = strtol(satir, &son, 10);
@@ -273,6 +282,7 @@ static void metin_oku(const char *soru, char *hedef, int uzunluk) {
     char satir[GIRDI_UZUNLUK];
     printf("%s", soru);
     if (fgets(satir, GIRDI_UZUNLUK, stdin) == NULL) {
+        girdi_bitti = 1;
         hedef[0] = '\0';
         return;
     }

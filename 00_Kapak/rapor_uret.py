@@ -523,6 +523,8 @@ verilmiştir.</p>
     <td>Başarılı, geçersiz giriş mesajı</td></tr>
 <tr><td>12</td><td>Veri dosyasının bulunmaması</td><td>Program çökmez, boş kayıtla açılır</td>
     <td>Başarılı, uyarı yazıldı</td></tr>
+<tr><td>13</td><td>Girdi akışının bitmesi (boru hattında satır kalmaması)</td><td>Sonsuz döngüye girmez,
+kayıtları yazıp kapanır</td><td>Başarılı, akış bitince temiz kapanıyor</td></tr>
 </table>
 
 <h1>9. Karşılaşılan Sorunlar ve Çözümler</h1>
@@ -544,6 +546,9 @@ verilmiştir.</p>
   <li><b>Sıradaki hastanın kimliği.</b> Kuyruk yalnızca kayıt işaretçisi tutsaydı, kayıt
       silindiğinde sıradaki hasta da kaybolurdu. Kuyruk düğümü numara ve adı kendi
       içinde saklayacak biçimde tasarlandı.</li>
+  <li><b>Girdi akışı bitince sonsuz döngü.</b> Girdi kesildiğinde <code>fgets</code> boş dönüyor,
+      menü bunu geçersiz seçim sayıp kendini tekrar yazıyordu; program durmuyordu. Girdi bitişi ayrı bir
+      bayrakla izlendi, akış bittiğinde program kayıtları dosyaya yazıp temiz kapanıyor.</li>
   <li><b>Bellek denetimi.</b> Valgrind Windows üzerinde çalışmadığı için ayırma ve serbest
       bırakma çağrıları bağlayıcı sarmalamasıyla (linker wrap) sayıldı. 1200 kayıtla açılış ve
       kapanışta 2408 ayırma yapıldı, 2405 serbest bırakma sayıldı. Aradaki üç fark, hiç kayıt
