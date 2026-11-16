@@ -71,16 +71,25 @@ durum: 0 bekliyor, 1 muayenede
 Dosya: veri/hastalar.csv (1200 kayit), veri/demo_hastalar.csv (12 kayit)
 Yeniden uretmek icin: python veri/veri_uret.py
 
+Okuma sirasinda eksik alan, bozuk sayi veya mukerrer numara tasiyan satirlar
+atlanir ve atlanan satir sayisi ekrana yazilir.
+
+Giris kurali: numara pozitif tam sayi, yas 0 ile 130 arasi olmalidir. 12abc gibi
+harf karisik girdiler, bos ad ve bos poliklinik reddedilir.
+
 ------------------------------------------------------------------------
 6. DOSYA DUZENI
 ------------------------------------------------------------------------
 kaynak_kod/   13 kaynak dosya, 7 .c ve 6 .h (derlenmis dosya yoktur)
-veri/         test verileri ve veri ureteci
-olcum/        benchmark.csv, deneysel olcum ciktisi (klasorde 03_Olcum)
-00_Kapak/     rapor, UML ve ekran goruntusu uretecleri
-Rapor.pdf               ara rapor (10 sayfa)
-UML.pdf                 UML yapi diyagrami (1 sayfa)
-04_YONERGE_UYUM_KONTROL_LISTESI.md  yonerge madde madde kontrol
+veri/         hastalar.csv (1200 kayit), demo_hastalar.csv (12 kayit), veri_uret.py
+03_Olcum/     benchmark.csv, --benchmark kipinde program tarafindan yazilir
+README.txt    bu dosya
+Rapor.pdf     ara rapor (12 sayfa)
+UML.pdf       UML yapi diyagrami (1 sayfa)
+
+Raporun ve UML'nin uretec betikleri ile ekran goruntuleri depoda 00_Kapak/
+klasorunde tutulur, teslim ZIP'ine konmaz. ZIP icerigi yukaridaki alti ogeden
+olusur.
 
 ------------------------------------------------------------------------
 7. GITHUB DEPOSU (herkese acik)

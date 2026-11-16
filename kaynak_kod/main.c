@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
 #include <time.h>
 
 #include "hasta.h"
@@ -21,6 +22,7 @@
 #include "dairesel.h"
 #include "dosya.h"
 
+#define YAS_UST 130
 #define VERI_YOLU "veri/hastalar.csv"
 #define GIRDI_UZUNLUK 128
 
@@ -29,7 +31,7 @@ static void menuyu_yaz(void);
 static int sayi_oku(const char *soru, int *hedef);
 static void metin_oku(const char *soru, char *hedef, int uzunluk);
 static Hasta *hasta_ekle_akis(Hasta *kayitlar, AgacDugum **agac, Islem **yigit);
-static Hasta *hasta_sil_akis(Hasta *kayitlar, AgacDugum **agac, Islem **yigit);
+static Hasta *hasta_sil_akis(Hasta *kayitlar, AgacDugum **agac, Islem **yigit, Kuyruk *kuyruk);
 static void benchmark(void);
 
 /* Girdi akisi bittiginde 1 olur. Menu dongusu bu bayragi gorup
@@ -90,7 +92,7 @@ int main(int argc, char **argv) {
             break;
 
         case 2:
-            kayitlar = hasta_sil_akis(kayitlar, &agac, &yigit);
+            kayitlar = hasta_sil_akis(kayitlar, &agac, &yigit, &kuyruk);
             break;
 
         case 3: {
@@ -124,7 +126,7 @@ int main(int argc, char **argv) {
 
         case 6: {
             int tc = 0;
-            if (!sayi_oku("Siraya eklenecek hasta no: ", &tc)) {
+            if (!sayi_oku("Siraya eklenecek hasta no: ", &tc) || tc <= 0) {
                 printf("Gecersiz numara.\n");
                 break;
             }
@@ -133,8 +135,19 @@ int main(int argc, char **argv) {
                 printf("Hasta kaydi bulunamadi, siraya alinmadi.\n");
                 break;
             }
-            kuyruk_ekle(&kuyruk, tc, dugum->hasta->ad);
-            printf("Hasta siraya alindi. Sirada %d hasta var.\n", kuyruk.adet);
+            if (dugum->hasta->durum == 1) {
+                printf("Hasta su anda muayenede, yeniden siraya alinamaz.\n");
+                break;
+            }
+            if (kuyruk_iceriyor(&kuyruk, tc)) {
+                printf("Hasta zaten sirada bekliyor.\n");
+                break;
+            }
+            if (kuyruk_ekle(&kuyruk, tc, dugum->hasta->ad)) {
+                printf("Hasta siraya alindi. Sirada %d hasta var.\n", kuyruk.adet);
+            } else {
+                printf("Hasta siraya alinamadi.\n");
+            }
             break;
         }
 
@@ -182,15 +195,27 @@ int main(int argc, char **argv) {
             if (cikan.tur == ISLEM_EKLE) {
                 kayitlar = kayit_sil(kayitlar, cikan.yedek.tc, NULL);
                 agac = agac_sil(agac, cikan.yedek.tc);
+                if (kuyruk_sil(&kuyruk, cikan.yedek.tc)) {
+                    printf("Hasta muayene sirasindan da cikarildi.\n");
+                }
                 printf("Geri alindi: %d numarali kayit eklemesi iptal edildi.\n", cikan.yedek.tc);
             } else {
+                int eklendi = 0;
                 kayitlar = kayit_ekle(kayitlar, cikan.yedek.tc, cikan.yedek.ad,
-                                      cikan.yedek.yas, cikan.yedek.poliklinik);
+                                      cikan.yedek.yas, cikan.yedek.poliklinik, &eklendi);
+                if (!eklendi) {
+                    printf("Geri alinamadi, bellek yetersiz.\n");
+                    break;
+                }
                 Hasta *geri = kayit_ara(kayitlar, cikan.yedek.tc);
                 if (geri != NULL) {
+                    geri->durum = cikan.yedek.durum;
                     agac = agac_ekle(agac, geri);
                 }
                 printf("Geri alindi: %d numarali silme islemi iptal edildi.\n", cikan.yedek.tc);
+                if (cikan.yedek.durum == 1) {
+                    printf("Kayit muayenede durumunda geri geldi.\n");
+                }
             }
             break;
         }
@@ -264,15 +289,33 @@ static double simdi_ms(void) {
 static int sayi_oku(const char *soru, int *hedef) {
     char satir[GIRDI_UZUNLUK];
     char *son = NULL;
+    long deger;
 
     printf("%s", soru);
     if (fgets(satir, GIRDI_UZUNLUK, stdin) == NULL) {
         girdi_bitti = 1;
         return 0;
     }
-    long deger = strtol(satir, &son, 10);
+    /* Satir tampona sigmadiysa kalan karakterleri at, sonraki giris kaymasin */
+    if (strchr(satir, '\n') == NULL) {
+        int c;
+        while ((c = getchar()) != '\n' && c != EOF) {
+            /* bosalt */
+        }
+    }
+
+    deger = strtol(satir, &son, 10);
     if (son == satir) {
-        return 0;
+        return 0;                       /* hic sayi yok */
+    }
+    while (*son == ' ' || *son == '\t' || *son == '\r' || *son == '\n') {
+        son++;
+    }
+    if (*son != '\0') {
+        return 0;                       /* 12abc gibi girdiler reddedilir */
+    }
+    if (deger < INT_MIN || deger > INT_MAX) {
+        return 0;                       /* tasma */
     }
     *hedef = (int)deger;
     return 1;
@@ -286,6 +329,13 @@ static void metin_oku(const char *soru, char *hedef, int uzunluk) {
         hedef[0] = '\0';
         return;
     }
+    /* Uzun girislerde satir sonuna kadar okuyup tamponu bosalt */
+    if (strchr(satir, '\n') == NULL) {
+        int c;
+        while ((c = getchar()) != '\n' && c != EOF) {
+            /* bosalt */
+        }
+    }
     satir[strcspn(satir, "\r\n")] = '\0';
     snprintf(hedef, (size_t)uzunluk, "%.*s", uzunluk - 1, satir);
 }
@@ -295,8 +345,11 @@ static Hasta *hasta_ekle_akis(Hasta *kayitlar, AgacDugum **agac, Islem **yigit) 
     int yas = 0;
     char ad[AD_UZUNLUK];
     char poliklinik[POLIKLINIK_UZUNLUK];
+    int eklendi = 0;
+    int yigitOk = 0;
+    Hasta *eklenen = NULL;
 
-    if (!sayi_oku("Hasta no: ", &tc)) {
+    if (!sayi_oku("Hasta no: ", &tc) || tc <= 0) {
         printf("Gecersiz numara, kayit eklenmedi.\n");
         return kayitlar;
     }
@@ -310,37 +363,72 @@ static Hasta *hasta_ekle_akis(Hasta *kayitlar, AgacDugum **agac, Islem **yigit) 
         printf("Hasta adi bos olamaz, kayit eklenmedi.\n");
         return kayitlar;
     }
-    if (!sayi_oku("Yas: ", &yas)) {
-        yas = 0;
+    if (!sayi_oku("Yas: ", &yas) || yas < 0 || yas > YAS_UST) {
+        printf("Gecersiz yas, kayit eklenmedi.\n");
+        return kayitlar;
     }
     metin_oku("Poliklinik: ", poliklinik, POLIKLINIK_UZUNLUK);
+    if (poliklinik[0] == '\0') {
+        printf("Poliklinik bos olamaz, kayit eklenmedi.\n");
+        return kayitlar;
+    }
 
-    kayitlar = kayit_ekle(kayitlar, tc, ad, yas, poliklinik);
-    Hasta *eklenen = kayit_ara(kayitlar, tc);
+    kayitlar = kayit_ekle(kayitlar, tc, ad, yas, poliklinik, &eklendi);
+    if (!eklendi) {
+        printf("Kayit eklenemedi.\n");
+        return kayitlar;
+    }
+    eklenen = kayit_ara(kayitlar, tc);
+    if (eklenen == NULL) {
+        printf("Kayit eklenemedi.\n");
+        return kayitlar;
+    }
     *agac = agac_ekle(*agac, eklenen);
-    *yigit = yigit_ekle(*yigit, ISLEM_EKLE, eklenen);
+    *yigit = yigit_ekle(*yigit, ISLEM_EKLE, eklenen, &yigitOk);
     printf("Hasta kaydi eklendi: %d\n", tc);
+    if (!yigitOk) {
+        printf("Uyari: geri alma kaydi tutulamadi.\n");
+    }
     return kayitlar;
 }
 
-static Hasta *hasta_sil_akis(Hasta *kayitlar, AgacDugum **agac, Islem **yigit) {
+static Hasta *hasta_sil_akis(Hasta *kayitlar, AgacDugum **agac, Islem **yigit, Kuyruk *kuyruk) {
     int tc = 0;
-    if (!sayi_oku("Silinecek hasta no: ", &tc)) {
+    int yigitOk = 0;
+    int sirada = 0;
+    int muayenede = 0;
+    Hasta yedek;
+    Hasta *bulunan = NULL;
+
+    if (!sayi_oku("Silinecek hasta no: ", &tc) || tc <= 0) {
         printf("Gecersiz numara.\n");
         return kayitlar;
     }
 
-    Hasta *bulunan = kayit_ara(kayitlar, tc);
+    bulunan = kayit_ara(kayitlar, tc);
     if (bulunan == NULL) {
         printf("Kayit bulunamadi.\n");
         return kayitlar;
     }
 
-    Hasta yedek;
+    sirada = kuyruk_iceriyor(kuyruk, tc);
+    muayenede = bulunan->durum;
     kayitlar = kayit_sil(kayitlar, tc, &yedek);
     *agac = agac_sil(*agac, tc);
-    *yigit = yigit_ekle(*yigit, ISLEM_SIL, &yedek);
+    if (sirada) {
+        (void)kuyruk_sil(kuyruk, tc);
+    }
+    *yigit = yigit_ekle(*yigit, ISLEM_SIL, &yedek, &yigitOk);
     printf("Hasta kaydi silindi: %d (geri alinabilir)\n", tc);
+    if (sirada) {
+        printf("Hasta muayene sirasindan da cikarildi.\n");
+    }
+    if (muayenede) {
+        printf("Uyari: silinen hasta muayenede gorunuyordu.\n");
+    }
+    if (!yigitOk) {
+        printf("Uyari: geri alma kaydi tutulamadi.\n");
+    }
     return kayitlar;
 }
 
@@ -352,8 +440,14 @@ static Hasta *hasta_sil_akis(Hasta *kayitlar, AgacDugum **agac, Islem **yigit) {
 static void benchmark(void) {
     const int boyutlar[3] = {1000, 10000, 100000};
     int i, j;
+    FILE *csv = fopen("03_Olcum/benchmark.csv", "w");
 
     printf("boyut;ekleme_liste_ms;ekleme_agac_ms;arama_liste_ms;arama_agac_ms;agac_yukseklik\n");
+    if (csv != NULL) {
+        fprintf(csv, "boyut;ekleme_liste_ms;ekleme_agac_ms;arama_liste_ms;arama_agac_ms;agac_yukseklik\n");
+    } else {
+        printf("Uyari: 03_Olcum/benchmark.csv yazilamadi, sonuclar yalnizca ekranda.\n");
+    }
 
     for (i = 0; i < 3; i++) {
         int n = boyutlar[i];
@@ -366,6 +460,9 @@ static void benchmark(void) {
         if (numaralar == NULL) {
             printf("Bellek yetersiz.\n");
             return;
+            if (csv != NULL) {
+                fclose(csv);
+            }
         }
 
         /* Karisik sirada numara uret, aksi halde agac zincire doner */
@@ -375,7 +472,11 @@ static void benchmark(void) {
 
         bas = simdi_ms();
         for (j = 0; j < n; j++) {
-            kayitlar = kayit_ekle(kayitlar, numaralar[j], "Deneme", 30, "Dahiliye");
+            int eklendi = 0;
+            kayitlar = kayit_ekle(kayitlar, numaralar[j], "Deneme", 30, "Dahiliye", &eklendi);
+            if (!eklendi) {
+                break;
+            }
         }
         son = simdi_ms();
         eklemeListe = son - bas;
@@ -383,6 +484,16 @@ static void benchmark(void) {
         /* Agaca ekleme icin listenin tamamini gezmek gerekmiyor,
            dugum isaretcisini tutan bir dizi kullaniyoruz */
         Hasta **isaretciler = (Hasta **)malloc(sizeof(Hasta *) * (size_t)n);
+        if (isaretciler == NULL) {
+            printf("Bellek yetersiz.\n");
+            free(numaralar);
+            agac_serbest(agac);
+            kayit_serbest(kayitlar);
+            if (csv != NULL) {
+                fclose(csv);
+            }
+            return;
+        }
         Hasta *gezen = kayitlar;
         for (j = n - 1; j >= 0; j--) {
             isaretciler[j] = gezen;
@@ -412,10 +523,18 @@ static void benchmark(void) {
 
         printf("%d;%.3f;%.3f;%.3f;%.3f;%d\n", n, eklemeListe, eklemeAgac,
                aramaListe, aramaAgac, agac_yukseklik(agac));
+        if (csv != NULL) {
+            fprintf(csv, "%d;%.3f;%.3f;%.3f;%.3f;%d\n", n, eklemeListe, eklemeAgac,
+                    aramaListe, aramaAgac, agac_yukseklik(agac));
+        }
 
         free(isaretciler);
         free(numaralar);
         agac_serbest(agac);
         kayit_serbest(kayitlar);
+    }
+    if (csv != NULL) {
+        fclose(csv);
+        printf("Olcumler 03_Olcum/benchmark.csv dosyasina yazildi.\n");
     }
 }

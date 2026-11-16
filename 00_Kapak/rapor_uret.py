@@ -480,8 +480,8 @@ YIGIT_AL(tepe):           yeniTepe = tepe.sonraki, BELLEK_BIRAK(tepe), DONDUR ye
 GERI_AL(yigit):
     islem = YIGIT_AL(yigit)
     eger islem yok: "geri alinacak islem yok" yaz
-    eger islem.tur == EKLE: listeden sil, agactan sil
-    yoksa: kaydi listeden ve agactan geri ekle</pre>
+    eger islem.tur == EKLE: listeden sil, agactan sil, siradan da cikar
+    yoksa: kaydi geri ekle, durumunu geri yukle, agaca ekle</pre>
 
 <h1>5. Karmaşıklık (Big-O) Analizi</h1>
 
@@ -509,7 +509,11 @@ düğümü iki işaretçi fazladan taşır, kayıt başına yaklaşık 16 bayt e
 <p>Ölçümler programın <code>--benchmark</code> kipinde yapılmıştır. Aynı iş yükü hem bağlı
 listeye hem ikili arama ağacına verilmiş, süreler <code>timespec_get</code> ile milisaniye
 altı çözünürlükte alınmıştır. Anahtarlar sıralı olmadığı için ağaç dengeli kalır. Ölçüm
-ortamı Windows 11, AMD64, gcc 16.2.0, -O2 iyileştirmesi.</p>
+ortamı Windows 11, AMD64, gcc 16.2.0, -O2 iyileştirmesi. Ölçümler tek bir oturumda
+alınmıştır ve program sonuçları <code>03_Olcum/benchmark.csv</code> dosyasına kendisi
+yazar, yani rapordaki tablo ile CSV aynı çalıştırmadan üretilir. Aynı donanımda
+tekrarlanan çalıştırmalarda süreler işletim sistemi yüküne göre yüzde 10 ile 20
+arasında oynayabilir, büyüme eğilimi ve ağaç yükseklikleri değişmez.</p>
 
 <p>Şekil 1 arama sürelerini logaritmik ölçekte, Şekil 2 ekleme sürelerini doğrusal ölçekte
 karşılaştırır. Şekil 3 ise ölçülen ağaç yüksekliğini dengeli ağaç beklentisiyle yan yana koyar.</p>
@@ -539,10 +543,10 @@ ilerler, ağaç her düğüm için ayrı bellek ayırır. Yatay eksen doğrusal.
 (log2(n+1)). Fark, anahtar dağılımının tam dengeli olmamasından gelir.</p>
 
 <p>Sonuçlar teorik beklentiyle uyumludur. Hasta sayısı yüz kat artarken bağlı listede arama
-süresi yaklaşık 28 600 katına çıkmıştır, çünkü her arama tüm listeyi baştan taramakta ve
-bellek erişimleri önbelleğe sığmamaktadır. Ağaçta aynı artış yaklaşık 476 kattır ve
+süresi yaklaşık 27 200 katına çıkmıştır, çünkü her arama tüm listeyi baştan taramakta ve
+bellek erişimleri önbelleğe sığmamaktadır. Ağaçta aynı artış yaklaşık 890 kattır ve
 logaritmik büyümeye yakındır. Yüz bin kayıtta arama başına düşen süre listede yaklaşık
-0,39 ms, ağaçta 0,0001 ms düzeyindedir. Ekleme tarafında liste sabit zamanlı olduğu için
+0,32 ms, ağaçta 0,00016 ms düzeyindedir. Ekleme tarafında liste sabit zamanlı olduğu için
 küçük boyutlarda öndedir, yüz bin kayıtta ağacın düğüm başına ayırma maliyeti listeninkine
 yaklaşır.</p>
 
@@ -600,6 +604,20 @@ verilmiştir.</p>
     <td>Başarılı, uyarı yazıldı</td></tr>
 <tr><td>13</td><td>Girdi akışının bitmesi (boru hattında satır kalmaması)</td><td>Sonsuz döngüye girmez,
 kayıtları yazıp kapanır</td><td>Başarılı, akış bitince temiz kapanıyor</td></tr>
+<tr><td>14</td><td>Aynı hastayı ikinci kez sıraya ekleme</td><td>Tekrar eklenmez, kullanıcı uyarılır</td>
+    <td>Başarılı, hasta zaten sırada bekliyor uyarısı</td></tr>
+<tr><td>15</td><td>Muayenede olan hastayı yeniden sıraya ekleme</td><td>İşlem reddedilir</td>
+    <td>Başarılı, muayenede uyarısı</td></tr>
+<tr><td>16</td><td>Sırada bekleyen hastanın kaydını silme</td><td>Kayıt ve sıra girdisi birlikte kaldırılır</td>
+    <td>Başarılı, muayene sırasından da çıkarıldı mesajı</td></tr>
+<tr><td>17</td><td>Sayı alanına 12abc, yaşa 200, numaraya negatif değer girme</td><td>Üçü de reddedilir</td>
+    <td>Başarılı, geçersiz numara ve geçersiz yaş mesajları</td></tr>
+<tr><td>18</td><td>Bozuk CSV, eksik alan, bozuk sayı ve mükerrer numara</td><td>Satırlar atlanır, sayaç yazılır</td>
+    <td>Başarılı, 7 satır atlandı, 1 kayıt yüklendi</td></tr>
+<tr><td>19</td><td>Boş veri dosyasıyla açma</td><td>Program çökmez, sıfır kayıtla açılır</td>
+    <td>Başarılı, 0 hasta kaydı yüklendi</td></tr>
+<tr><td>20</td><td>--benchmark kipinde ölçüm</td><td>Sonuçlar ekrana ve CSV dosyasına yazılır</td>
+    <td>Başarılı, 03_Olcum/benchmark.csv güncellendi</td></tr>
 </table>
 
 <h1>9. Karşılaşılan Sorunlar ve Çözümler</h1>
@@ -624,6 +642,24 @@ kayıtları yazıp kapanır</td><td>Başarılı, akış bitince temiz kapanıyor
   <li><b>Girdi akışı bitince sonsuz döngü.</b> Girdi kesildiğinde <code>fgets</code> boş dönüyor,
       menü bunu geçersiz seçim sayıp kendini tekrar yazıyordu; program durmuyordu. Girdi bitişi ayrı bir
       bayrakla izlendi, akış bittiğinde program kayıtları dosyaya yazıp temiz kapanıyor.</li>
+  <li><b>Bellek ayrılamadığında sessiz başarı.</b> <code>kayit_ekle</code> bellek ayıramadığında
+      eski listeyi döndürüyor, çağıran ise işlemi başarılı sanıyordu. Üç ekleme işlevi
+      (<code>kayit_ekle</code>, <code>kuyruk_ekle</code>, <code>yigit_ekle</code>) artık başarı
+      bayrağı döndürüyor, ayrıca ağaca ekleme yalnızca kayıt gerçekten oluştuysa yapılıyor.</li>
+  <li><b>Kuyruk ile kayıt defterinin ayrışması.</b> Aynı hasta birden fazla kez sıraya
+      yazılabiliyor, muayenedeki hasta yeniden sıraya alınabiliyor ve sırada bekleyen hastanın
+      kaydı silindiğinde sıra girdisi kalıyordu. <code>kuyruk_iceriyor</code> ve
+      <code>kuyruk_sil</code> işlevleri eklendi, üç durum da menüde denetleniyor.</li>
+  <li><b>Gevşek sayı girişi.</b> <code>atoi</code> tabanlı okuma 12abc gibi girdileri 12 olarak
+      kabul ediyor, taşma ve yaş aralığı denetlenmiyordu. <code>strtol</code> ile son karakter
+      denetimi, taşma sınaması, 0 ile 130 arası yaş kuralı ve uzun girişlerde tampon boşaltma
+      eklendi.</li>
+  <li><b>Dosya okumada sessiz sıfırlama.</b> Bozuk sayısal alan <code>atoi</code> yüzünden sıfıra
+      dönüşüyor, mükerrer numara ve eksik alan denetlenmiyordu. Sayısal alanlar sıkı çözümleniyor,
+      mükerrer numara, eksik alan ve bozuk satırlar sayılıp raporlanıyor.</li>
+  <li><b>Ölçüm dosyasının elle güncellenmesi.</b> <code>--benchmark</code> yalnızca ekrana
+      yazıyor, CSV ayrıca düzenleniyordu. Ölçüm sonuçları artık her koşuda
+      <code>03_Olcum/benchmark.csv</code> dosyasına da yazılıyor.</li>
   <li><b>Bellek denetimi.</b> Valgrind Windows üzerinde çalışmadığı için ayırma ve serbest
       bırakma çağrıları bağlayıcı sarmalamasıyla (linker wrap) sayıldı. 1200 kayıtla açılış ve
       kapanışta 2407 ayırma yapıldı, 2405 serbest bırakma sayıldı. Kalan iki fark, 12 kayıtlık demo
@@ -706,7 +742,7 @@ bulunmaz.</p>
 <tr><th style="width:34%%">Paketteki öğe</th><th>İçerik</th></tr>
 <tr><td>kaynak_kod/</td><td>13 kaynak dosya (7 .c ve 6 .h), derlenmiş dosya içermez</td></tr>
 <tr><td>veri/</td><td>hastalar.csv (1200 kayıt), demo_hastalar.csv (12 kayıt), veri üreteci</td></tr>
-<tr><td>olcum/</td><td>benchmark.csv, deneysel ölçüm çıktısı</td></tr>
+<tr><td>03_Olcum/</td><td>benchmark.csv, deneysel ölçüm çıktısı, --benchmark kipinde program kendisi yazar</td></tr>
 <tr><td>README.txt</td><td>Derleme, çalıştırma, menü ve veri biçimi açıklaması</td></tr>
 <tr><td>Rapor.pdf</td><td>Bu rapor</td></tr>
 <tr><td>UML.pdf</td><td>Yapı, modül ve bağımlılık diyagramı</td></tr>

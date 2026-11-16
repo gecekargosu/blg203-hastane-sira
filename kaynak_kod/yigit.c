@@ -7,8 +7,16 @@
  * cikarma listenin basindan yapildigi icin ikisi de sabit zamandadir.
  * Dizi ile kurulsaydi sabit bir geri alma derinligi secmek gerekirdi.
  */
-Islem *yigit_ekle(Islem *tepe, IslemTuru tur, const Hasta *h) {
-    Islem *yeni = (Islem *)malloc(sizeof(Islem));
+Islem *yigit_ekle(Islem *tepe, IslemTuru tur, const Hasta *h, int *basarili) {
+    Islem *yeni;
+
+    if (basarili != NULL) {
+        *basarili = 0;
+    }
+    if (h == NULL) {
+        return tepe;
+    }
+    yeni = (Islem *)malloc(sizeof(Islem));
     if (yeni == NULL) {
         printf("Bellek yetersiz, islem kaydi tutulamadi.\n");
         return tepe;
@@ -17,6 +25,9 @@ Islem *yigit_ekle(Islem *tepe, IslemTuru tur, const Hasta *h) {
     yeni->yedek = *h;
     yeni->yedek.sonraki = NULL;
     yeni->sonraki = tepe;
+    if (basarili != NULL) {
+        *basarili = 1;
+    }
     return yeni;
 }
 

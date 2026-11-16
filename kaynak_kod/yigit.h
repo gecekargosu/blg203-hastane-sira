@@ -19,7 +19,11 @@ typedef struct Islem {
     struct Islem *sonraki;  /* yigit baglantisi */
 } Islem;
 
-Islem *yigit_ekle(Islem *tepe, IslemTuru tur, const Hasta *h);
+/*
+ * Ekleme basarili olursa *basarili 1, bellek yetersizse 0 olur.
+ * Basarisizlikta yigin degismez; cagiran taraf kullaniciyi uyarir.
+ */
+Islem *yigit_ekle(Islem *tepe, IslemTuru tur, const Hasta *h, int *basarili);
 Islem *yigit_al(Islem *tepe, Islem *cikan);
 int    yigit_bos(const Islem *tepe);
 void   yigit_serbest(Islem *tepe);

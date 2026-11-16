@@ -74,7 +74,8 @@ def uret():
     # 2) Kuyruk
     k, h2 = kutu(40, 330, "Kuyruk",
                  ["+ on : Bekleyen*", "+ arka : Bekleyen*", "+ adet : int"],
-                 ["+ kuyruk_baslat(k)", "+ kuyruk_ekle(k, tc, ad)",
+                 ["+ kuyruk_baslat(k)", "+ kuyruk_ekle(k, tc, ad) : int",
+                  "+ kuyruk_iceriyor(k, tc) : int", "+ kuyruk_sil(k, tc) : int",
                   "+ kuyruk_cikar(k) : int", "+ kuyruk_listele(k)",
                   "+ kuyruk_serbest(k)"])
     parcalar.append(k)

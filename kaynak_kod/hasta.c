@@ -7,9 +7,17 @@
  * Yeni hasta kaydini listenin basina ekler. Basa ekleme sabit zamanli
  * oldugu icin toplu yuklemede tercih edildi. Kullaniciya gosterilen
  * sirali liste agac uzerinden uretilir.
+ *
+ * Bellek ayrilamazsa liste degismez ve *basarili 0 yapilir. Cagiran
+ * taraf bu durumda agaca veya yigita NULL kayit gondermez.
  */
-Hasta *kayit_ekle(Hasta *bas, int tc, const char *ad, int yas, const char *poliklinik) {
+Hasta *kayit_ekle(Hasta *bas, int tc, const char *ad, int yas,
+                  const char *poliklinik, int *basarili) {
     Hasta *yeni = (Hasta *)malloc(sizeof(Hasta));
+
+    if (basarili != NULL) {
+        *basarili = 0;
+    }
     if (yeni == NULL) {
         printf("Bellek yetersiz, kayit eklenemedi.\n");
         return bas;
@@ -20,6 +28,9 @@ Hasta *kayit_ekle(Hasta *bas, int tc, const char *ad, int yas, const char *polik
     snprintf(yeni->poliklinik, POLIKLINIK_UZUNLUK, "%s", poliklinik);
     yeni->durum = 0;
     yeni->sonraki = bas;
+    if (basarili != NULL) {
+        *basarili = 1;
+    }
     return yeni;
 }
 

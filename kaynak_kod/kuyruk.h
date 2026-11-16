@@ -22,7 +22,14 @@ typedef struct Kuyruk {
 } Kuyruk;
 
 void kuyruk_baslat(Kuyruk *k);
-void kuyruk_ekle(Kuyruk *k, int tc, const char *ad);
+
+/*
+ * Sona ekleme. Basarili olursa 1, bellek yetersizse 0 doner.
+ * Ayni hasta numarasi kuyrukta varsa ekleme yapilmaz.
+ */
+int  kuyruk_ekle(Kuyruk *k, int tc, const char *ad);
+int  kuyruk_iceriyor(const Kuyruk *k, int tc);
+int  kuyruk_sil(Kuyruk *k, int tc);
 int  kuyruk_cikar(Kuyruk *k, int *tc, char *ad);
 void kuyruk_listele(const Kuyruk *k);
 void kuyruk_serbest(Kuyruk *k);

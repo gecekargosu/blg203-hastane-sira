@@ -9,15 +9,34 @@ void kuyruk_baslat(Kuyruk *k) {
     k->adet = 0;
 }
 
+/* Numarasi verilen hasta kuyrukta bekliyor mu? */
+int kuyruk_iceriyor(const Kuyruk *k, int tc) {
+    const Bekleyen *gezen = k->on;
+    while (gezen != NULL) {
+        if (gezen->tc == tc) {
+            return 1;
+        }
+        gezen = gezen->sonraki;
+    }
+    return 0;
+}
+
 /*
  * Kuyrugun sonuna ekleme. Ilk gelen ilk cikar kurali geregi
- * hastalar bu sirada cagrilir.
+ * hastalar bu sirada cagrilir. Ayni numara ikinci kez eklenmez,
+ * boylece kayit defteri ile sira birbirinden kopmaz.
+ * Bellek ayrilamazsa 0 doner ve cagiran taraf kullaniciya bildirir.
  */
-void kuyruk_ekle(Kuyruk *k, int tc, const char *ad) {
-    Bekleyen *yeni = (Bekleyen *)malloc(sizeof(Bekleyen));
+int kuyruk_ekle(Kuyruk *k, int tc, const char *ad) {
+    Bekleyen *yeni;
+
+    if (kuyruk_iceriyor(k, tc)) {
+        return 0;
+    }
+    yeni = (Bekleyen *)malloc(sizeof(Bekleyen));
     if (yeni == NULL) {
         printf("Bellek yetersiz, hasta siraya eklenemedi.\n");
-        return;
+        return 0;
     }
     yeni->tc = tc;
     snprintf(yeni->ad, BEKLEYEN_AD_UZUNLUK, "%s", ad);
@@ -31,6 +50,35 @@ void kuyruk_ekle(Kuyruk *k, int tc, const char *ad) {
         k->arka = yeni;
     }
     k->adet++;
+    return 1;
+}
+
+/*
+ * Siradan cikarma. Kayit defterinden silinen hasta kuyrukta
+ * beklemesin diye kullanilir. Bulunursa 1, bulunamazsa 0 doner.
+ */
+int kuyruk_sil(Kuyruk *k, int tc) {
+    Bekleyen *gezen = k->on;
+    Bekleyen *onceki = NULL;
+
+    while (gezen != NULL && gezen->tc != tc) {
+        onceki = gezen;
+        gezen = gezen->sonraki;
+    }
+    if (gezen == NULL) {
+        return 0;
+    }
+    if (onceki == NULL) {
+        k->on = gezen->sonraki;
+    } else {
+        onceki->sonraki = gezen->sonraki;
+    }
+    if (k->arka == gezen) {
+        k->arka = onceki;
+    }
+    free(gezen);
+    k->adet--;
+    return 1;
 }
 
 /*
