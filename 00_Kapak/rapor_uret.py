@@ -542,9 +542,11 @@ verilmiştir.</p>
   <li><b>Sıradaki hastanın kimliği.</b> Kuyruk yalnızca kayıt işaretçisi tutsaydı, kayıt
       silindiğinde sıradaki hasta da kaybolurdu. Kuyruk düğümü numara ve adı kendi
       içinde saklayacak biçimde tasarlandı.</li>
-  <li><b>Bellek denetimi.</b> Valgrind Windows üzerinde çalışmadığı için sızıntı denetimi
-      elle yapıldı. Her ayırma işleminin karşılığı serbest bırakma işlevleri eklendi,
-      program kapanışında beş yapı sırayla boşaltılıyor. Araç destekli doğrulama final
+  <li><b>Bellek denetimi.</b> Valgrind Windows üzerinde çalışmadığı için ayırma ve serbest
+      bırakma çağrıları bağlayıcı sarmalamasıyla (linker wrap) sayıldı. 1200 kayıtla açılış ve
+      kapanışta 2408 ayırma yapıldı, 2405 serbest bırakma sayıldı. Aradaki üç fark, hiç kayıt
+      yüklenmeyen denemede de aynı çıktı; yani bu fark standart kütüphanenin tampon belleği,
+      kayıt sayısıyla büyüyen bir sızıntı yok. Sızıntı avcısı ile araç destekli doğrulama final
       sürümüne bırakıldı.</li>
 </ul>
 
@@ -614,13 +616,21 @@ hastane.exe                              # 1200 kayitlik veri ile acilir
 hastane.exe veri/demo_hastalar.csv       # 12 kayitlik demo verisi ile acilir
 hastane.exe --benchmark                  # deneysel olcumu calistirir</pre>
 
+<p>Teslim paketinin içeriği aşağıdaki gibidir. Paket içinde derlenmiş dosya (.exe, .o)
+bulunmaz.</p>
+
 <table>
-<tr><th style="width:30%%">Klasör</th><th>İçerik</th></tr>
-<tr><td>kaynak_kod</td><td>12 kaynak dosya, derlenmiş dosya içermez</td></tr>
-<tr><td>veri</td><td>hastalar.csv (1200 kayıt), demo_hastalar.csv, veri üreteci</td></tr>
-<tr><td>03_Olcum</td><td>Deneysel ölçüm çıktısı</td></tr>
-<tr><td>00_Kapak</td><td>Rapor ve ekran görüntüsü üreteçleri</td></tr>
+<tr><th style="width:34%%">Paketteki öğe</th><th>İçerik</th></tr>
+<tr><td>kaynak_kod/</td><td>12 kaynak dosya (.c ve .h), derlenmiş dosya içermez</td></tr>
+<tr><td>veri/</td><td>hastalar.csv (1200 kayıt), demo_hastalar.csv (12 kayıt), veri üreteci</td></tr>
+<tr><td>olcum/</td><td>benchmark.csv, deneysel ölçüm çıktısı</td></tr>
+<tr><td>README.txt</td><td>Derleme, çalıştırma, menü ve veri biçimi açıklaması</td></tr>
+<tr><td>Rapor.pdf</td><td>Bu rapor</td></tr>
+<tr><td>UML.pdf</td><td>Yapı, modül ve bağımlılık diyagramı</td></tr>
 </table>
+
+<p>Sürüm geçmişi herkese açık depoda tutulmaktadır:
+github.com/gecekargosu/blg203-hastane-sira</p>
 
 </body></html>
 """

@@ -83,7 +83,15 @@ UML.pdf                 UML yapi diyagrami (1 sayfa)
 04_YONERGE_UYUM_KONTROL_LISTESI.md  yonerge madde madde kontrol
 
 ------------------------------------------------------------------------
-7. DEMO VIDEOSU
+7. GITHUB DEPOSU (herkese acik)
+------------------------------------------------------------------------
+https://github.com/gecekargosu/blg203-hastane-sira
+
+Depoda kaynak kodun commit gecmisi, rapor ve UML dosyasi bulunur.
+Hoca kontrol icin dogrudan bu baglantidan inceleyebilir.
+
+------------------------------------------------------------------------
+8. DEMO VIDEOSU
 ------------------------------------------------------------------------
 Final tesliminde eklenecek 5-8 dakikalik ekran kaydi bagi:
 (baglanti final tesliminden once buraya yazilacak)
