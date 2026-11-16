@@ -5,7 +5,8 @@
 /*
  * Ikili arama agacina ekleme. Kucuk numaralar sola, buyukler saga gider.
  * Ortalama durumda logaritmik, sirali veri gelirse agac zincire donusur ve
- * arama dogrusal olur. Bu davranis deneysel bolumde olculmustur.
+ * arama dogrusal olur. Olcumler karisik anahtarlarla yapildigi icin bu
+ * bozulma olculmemistir, cozum olarak dengeli agac (AVL) planlanmistir.
  */
 AgacDugum *agac_ekle(AgacDugum *kok, Hasta *h) {
     if (kok == NULL) {

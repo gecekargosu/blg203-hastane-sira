@@ -5,6 +5,7 @@ Yonerge en az 1000 kayit istedigi icin bu sayi secildi.
 Bicim: tc;ad;yas;poliklinik;durum
 Kullanim: python veri_uret.py
 """
+import os
 import random
 
 ADLAR = [
@@ -27,11 +28,20 @@ for i in range(1200):
     tc = 30001 + i
     ad = ADLAR[(i * 11) % len(ADLAR)]
     yas = 1 + ortam.randint(0, 88)
-    poliklinik = POLIKLINIKLER[(i * 5) % len(POLIKLINIKLER)]
+    poliklinik = POLIKLINIKLER[(i * 7) % len(POLIKLINIKLER)]
     durum = 1 if ortam.random() < 0.08 else 0
     satirlar.append("%d;%s;%d;%s;%d" % (tc, ad, yas, poliklinik, durum))
 
-with open("hastalar.csv", "w", encoding="utf-8") as dosya:
+# Kayitlar karisik sirada yazilir. Sirali yazilirsa ikili arama agaci
+# zincire donusur ve arama dogrusal olur. Sabit tohum sayesinde dosya
+# her uretimde ayni karisik duzende olur.
+govde = satirlar[1:]
+ortam.shuffle(govde)
+satirlar = [satirlar[0]] + govde
+
+HEDEF = os.path.join(os.path.dirname(os.path.abspath(__file__)), "hastalar.csv")
+
+with open(HEDEF, "w", encoding="utf-8") as dosya:
     dosya.write("\n".join(satirlar) + "\n")
 
 print("hastalar.csv yazildi, kayit sayisi:", len(satirlar) - 1)

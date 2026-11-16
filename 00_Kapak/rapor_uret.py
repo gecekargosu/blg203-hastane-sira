@@ -183,7 +183,7 @@ HTML = """<!doctype html>
 <div class="kapak">
   <img class="logo" src="%(logo)s">
   <div class="uni">T.C.<br>İSTANBUL RUMELİ ÜNİVERSİTESİ<br>
-  MÜHENDİSLİK VE MİMARLIK FAKÜLTESİ<br>YAPAY ZEKÂ VE MAKİNE ÖĞRENMESİ BÖLÜMÜ</div>
+  MÜHENDİSLİK VE DOĞA BİLİMLERİ FAKÜLTESİ<br>YAPAY ZEKÂ VE MAKİNE ÖĞRENMESİ BÖLÜMÜ</div>
 
   <div class="ders">BLG203 VERİ YAPILARI DERSİ</div>
   <div class="tur">DÖNEM PROJESİ ARA RAPORU</div>
@@ -533,7 +533,7 @@ logaritmik ölçekte.</p>
 <div class="grafik">
 %(grafik_ekleme)s
 </div>
-<p class="kucuk">Şekil 2. Ekleme süreleri. Bağlı liste sona ekleme yaptığı için sabit zamanda
+<p class="kucuk">Şekil 2. Ekleme süreleri. Bağlı liste yeni kaydı listenin başına eklediği için sabit zamanda
 ilerler, ağaç her düğüm için ayrı bellek ayırır. Yatay eksen doğrusal.</p>
 
 <div class="grafik">
@@ -543,12 +543,18 @@ ilerler, ağaç her düğüm için ayrı bellek ayırır. Yatay eksen doğrusal.
 (log2(n+1)). Fark, anahtar dağılımının tam dengeli olmamasından gelir.</p>
 
 <p>Sonuçlar teorik beklentiyle uyumludur. Hasta sayısı yüz kat artarken bağlı listede arama
-süresi yaklaşık 27 200 katına çıkmıştır, çünkü her arama tüm listeyi baştan taramakta ve
-bellek erişimleri önbelleğe sığmamaktadır. Ağaçta aynı artış yaklaşık 890 kattır ve
+süresi yaklaşık %(kat_liste)s katına çıkmıştır, çünkü her arama tüm listeyi baştan taramakta ve
+bellek erişimleri önbelleğe sığmamaktadır. Ağaçta aynı artış yaklaşık %(kat_agac)s kattır ve
 logaritmik büyümeye yakındır. Yüz bin kayıtta arama başına düşen süre listede yaklaşık
-0,32 ms, ağaçta 0,00016 ms düzeyindedir. Ekleme tarafında liste sabit zamanlı olduğu için
+%(birim_liste)s ms, ağaçta %(birim_agac)s ms düzeyindedir. Ekleme tarafında liste sabit zamanlı olduğu için
 küçük boyutlarda öndedir, yüz bin kayıtta ağacın düğüm başına ayırma maliyeti listeninkine
 yaklaşır.</p>
+
+<p>Ölçümler karışık anahtarlarla yapılmıştır. Veri dosyası da karışık sırada
+tutulur, çünkü üreteç kayıtları sabit tohumla karıştırır. Sıralı veya ters sıralı
+dosya yüklenirse ağaç zincire dönüşür ve arama doğrusal olur. Bu bozulma bu
+sürümde ölçülmemiştir, çözüm olarak dengeli ağaç (AVL) final sürümüne
+bırakılmıştır.</p>
 
 <p>Ağaç yükseklikleri 17, 26 ve 59 olarak ölçülmüştür. Dengeli bir ağaçta beklenen değerler
 10, 14 ve 17'dir. Aradaki fark, anahtar üretiminde kullanılan mod işleminin ağacı tam dengeli
@@ -610,7 +616,7 @@ kayıtları yazıp kapanır</td><td>Başarılı, akış bitince temiz kapanıyor
     <td>Başarılı, muayenede uyarısı</td></tr>
 <tr><td>16</td><td>Sırada bekleyen hastanın kaydını silme</td><td>Kayıt ve sıra girdisi birlikte kaldırılır</td>
     <td>Başarılı, muayene sırasından da çıkarıldı mesajı</td></tr>
-<tr><td>17</td><td>Sayı alanına 12abc, yaşa 200, numaraya negatif değer girme</td><td>Üçü de reddedilir</td>
+<tr><td>17</td><td>Sayı alanına 12abc, yaşa 200, numaraya negatif değer ve 12345678901 taşması</td><td>Hepsi reddedilir</td>
     <td>Başarılı, geçersiz numara ve geçersiz yaş mesajları</td></tr>
 <tr><td>18</td><td>Bozuk CSV, eksik alan, bozuk sayı ve mükerrer numara</td><td>Satırlar atlanır, sayaç yazılır</td>
     <td>Başarılı, 7 satır atlandı, 1 kayıt yüklendi</td></tr>
@@ -666,7 +672,8 @@ kayıtları yazıp kapanır</td><td>Başarılı, akış bitince temiz kapanıyor
       dosyasında 32 ayırma 29 bırakma, hiç kayıt yüklenmeyen denemede ise 8 ayırma 5 bırakma olarak
       ölçüldü. Yani fark kayıt sayısıyla büyümüyor, iki üç çağrıda sabit kalıyor ve standart
       kütüphanenin tampon belleğinden geliyor. Sızıntı avcısı ile araç destekli doğrulama final
-      sürümüne bırakıldı.</li>
+      sürümüne bırakıldı. Bu makinede AddressSanitizer ve Valgrind bulunmadığı için
+      (mingw kurulumunda libasan yok) araç tabanlı denetim burada çalıştırılamadı.</li>
 </ul>
 
 <h1>10. İş Bölümü</h1>
@@ -762,6 +769,10 @@ def rapor_uret():
         "css": CSS,
         "logo": "file:///" + os.path.join(KOK, "00_Kapak", "assets", "logo.png").replace("\\", "/"),
         "tablo": tablo_html(veri),
+        "kat_liste": "{:,}".format(int(round(veri[-1]["ar_liste"] / veri[0]["ar_liste"]))).replace(",", " "),
+        "kat_agac": "{:,}".format(int(round(veri[-1]["ar_agac"] / veri[0]["ar_agac"]))).replace(",", " "),
+        "birim_liste": ("%.2f" % (veri[-1]["ar_liste"] / 100000.0)).replace(".", ","),
+        "birim_agac": ("%.5f" % (veri[-1]["ar_agac"] / 100000.0)).replace(".", ","),
         "grafik": grafik_html(veri),
         "grafik_ekleme": grafik_ekleme_html(veri),
         "grafik_yukseklik": grafik_yukseklik_html(veri),

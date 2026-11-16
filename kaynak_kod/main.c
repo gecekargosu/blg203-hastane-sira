@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
+#include <errno.h>
 #include <time.h>
 
 #include "hasta.h"
@@ -193,8 +194,11 @@ int main(int argc, char **argv) {
                 break;
             }
             if (cikan.tur == ISLEM_EKLE) {
-                kayitlar = kayit_sil(kayitlar, cikan.yedek.tc, NULL);
+                /* Once agac dugumu kaldirilir. AgacDugum hasta isaretcisi uzerinden tc
+                 * okudugu icin kayit_sil'den sonra cagrilirsa serbest birakilmis
+                 * bellege erisilir (use-after-free). */
                 agac = agac_sil(agac, cikan.yedek.tc);
+                kayitlar = kayit_sil(kayitlar, cikan.yedek.tc, NULL);
                 if (kuyruk_sil(&kuyruk, cikan.yedek.tc)) {
                     printf("Hasta muayene sirasindan da cikarildi.\n");
                 }
@@ -289,7 +293,7 @@ static double simdi_ms(void) {
 static int sayi_oku(const char *soru, int *hedef) {
     char satir[GIRDI_UZUNLUK];
     char *son = NULL;
-    long deger;
+    long long deger;
 
     printf("%s", soru);
     if (fgets(satir, GIRDI_UZUNLUK, stdin) == NULL) {
@@ -304,7 +308,14 @@ static int sayi_oku(const char *soru, int *hedef) {
         }
     }
 
-    deger = strtol(satir, &son, 10);
+    /* Windows uzerinde long 32 bit oldugu icin strtol tasan degeri
+     * LONG_MAX'a sabitler ve hata sessizce kaybolur. strtoll ile 64 bit
+     * cozumleyip aralik denetimi elle yapiliyor. */
+    errno = 0;
+    deger = strtoll(satir, &son, 10);
+    if (errno == ERANGE) {
+        return 0;                       /* tasma */
+    }
     if (son == satir) {
         return 0;                       /* hic sayi yok */
     }
@@ -413,8 +424,9 @@ static Hasta *hasta_sil_akis(Hasta *kayitlar, AgacDugum **agac, Islem **yigit, K
 
     sirada = kuyruk_iceriyor(kuyruk, tc);
     muayenede = bulunan->durum;
-    kayitlar = kayit_sil(kayitlar, tc, &yedek);
+    /* Ayni gerekce: agac dugumu serbest birakilmadan once kaldirilmali. */
     *agac = agac_sil(*agac, tc);
+    kayitlar = kayit_sil(kayitlar, tc, &yedek);
     if (sirada) {
         (void)kuyruk_sil(kuyruk, tc);
     }

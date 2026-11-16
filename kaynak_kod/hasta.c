@@ -11,6 +11,24 @@
  * Bellek ayrilamazsa liste degismez ve *basarili 0 yapilir. Cagiran
  * taraf bu durumda agaca veya yigita NULL kayit gondermez.
  */
+/*
+ * Metni hedefe kopyalar, CSV ayiricisi olan noktali virgulu virgule cevirir.
+ * Boylece kullanici adina noktali virgul yazsa da dosya bicimi bozulmaz.
+ */
+static void csv_metin_kopyala(char *hedef, int uzunluk, const char *kaynak) {
+    int i = 0;
+
+    if (kaynak == NULL) {
+        hedef[0] = '\0';
+        return;
+    }
+    while (kaynak[i] != '\0' && i < uzunluk - 1) {
+        hedef[i] = (kaynak[i] == ';') ? ',' : kaynak[i];
+        i++;
+    }
+    hedef[i] = '\0';
+}
+
 Hasta *kayit_ekle(Hasta *bas, int tc, const char *ad, int yas,
                   const char *poliklinik, int *basarili) {
     Hasta *yeni = (Hasta *)malloc(sizeof(Hasta));
@@ -23,9 +41,11 @@ Hasta *kayit_ekle(Hasta *bas, int tc, const char *ad, int yas,
         return bas;
     }
     yeni->tc = tc;
-    snprintf(yeni->ad, AD_UZUNLUK, "%s", ad);
+    /* CSV ayiricisi noktali virgul oldugu icin ad ve poliklinik icindeki
+     * noktali virguller virgule cevrilir, dosya bicimi bozulmaz. */
+    csv_metin_kopyala(yeni->ad, AD_UZUNLUK, ad);
     yeni->yas = yas;
-    snprintf(yeni->poliklinik, POLIKLINIK_UZUNLUK, "%s", poliklinik);
+    csv_metin_kopyala(yeni->poliklinik, POLIKLINIK_UZUNLUK, poliklinik);
     yeni->durum = 0;
     yeni->sonraki = bas;
     if (basarili != NULL) {

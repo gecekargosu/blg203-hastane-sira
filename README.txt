@@ -72,7 +72,10 @@ Dosya: veri/hastalar.csv (1200 kayit), veri/demo_hastalar.csv (12 kayit)
 Yeniden uretmek icin: python veri/veri_uret.py
 
 Okuma sirasinda eksik alan, bozuk sayi veya mukerrer numara tasiyan satirlar
-atlanir ve atlanan satir sayisi ekrana yazilir.
+atlanir ve atlanan satir sayisi ekrana yazilir. Ad veya poliklinik icindeki
+noktali virgul yazilirken virgule cevrilir, boylece dosya bicimi bozulmaz.
+Kayitlar dosyada karisik sirada tutulur, sirali dosya ikili arama agacini
+zincire cevirdigi icin uretec kayitlari sabit tohumla karistirir.
 
 Giris kurali: numara pozitif tam sayi, yas 0 ile 130 arasi olmalidir. 12abc gibi
 harf karisik girdiler, bos ad ve bos poliklinik reddedilir.
