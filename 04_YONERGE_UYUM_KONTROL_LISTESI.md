@@ -82,7 +82,7 @@ git push -u origin main
 | Madde | Durum |
 |-------|-------|
 | Hazır koleksiyon/STL kütüphanesi kullanılmadı | ☑ |
-| Bölüm 3'teki zorunlu gereksinimlerin tamamı | ☑ 4/7 ara sürümde, 3 tanesi finalde (tablo 2) |
+| Bölüm 3'teki zorunlu gereksinimlerin tamamı | ☑ 3'ü ara sürümde karşılandı (dosya, UML, sıfırdan gerçekleme), 4'ü finalde (tablo 2) |
 | Program README talimatıyla başka bilgisayarda derlenip çalışıyor | ☑ gcc C11, uyarısız derleme |
 | Veri dosyaları ZIP içinde ve doğru okunuyor | ☑ 1200 kayıt yüklendi |
 | Raporda karmaşıklık tablosu ve performans grafikleri var | ☑ |
