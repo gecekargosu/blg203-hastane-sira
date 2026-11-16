@@ -88,7 +88,7 @@ git push -u origin main
 | Raporda karmaşıklık tablosu ve performans grafikleri var | ☑ |
 | Raporda iş bölümü tablosu ve yapay zekâ beyanı var | ☑ |
 | Demo videosu bağlantısı erişime açık | ☐ finalde |
-| ZIP doğru isimlendirildi ve zamanında yüklendi | ☑ `Cengiz_Kilic_251205027_Yapay_Zeka_ve_Makine_Ogrenmesi_Ara_Teslim.zip` |
+| ZIP doğru isimlendirildi ve zamanında yüklendi | ☑ `Cengiz_Kilic_251205027_Yapay_Zeka_ve_Makine_Ogrenmesi.zip` |
 
 ## 7. Doğrulanan Teknik Kontroller
 
