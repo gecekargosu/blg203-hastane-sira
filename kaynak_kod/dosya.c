@@ -144,20 +144,40 @@ int dosya_oku(const char *yol, Hasta **kayitlar, AgacDugum **agac) {
 int dosya_yaz(const char *yol, const Hasta *kayitlar) {
     FILE *dosya = fopen(yol, "w");
     const Hasta *gezen = kayitlar;
+    const Hasta **isaretciler = NULL;
     int sayac = 0;
+    int i;
 
     if (dosya == NULL) {
         printf("Dosya yazilamadi: %s\n", yol);
         return -1;
     }
 
-    fprintf(dosya, "tc;ad;yas;poliklinik;durum\n");
+    /* Liste basa ekleme yaptigi icin kayitlar tersten dolasilir. Dosya da
+     * tersten yazilirsa dosyadaki sira bir sonraki acilista aynen korunur.
+     * Liste sirasinda yazmak dosyayi her oturumda ters cevirirdi. */
     while (gezen != NULL) {
-        fprintf(dosya, "%d;%s;%d;%s;%d\n",
-                gezen->tc, gezen->ad, gezen->yas, gezen->poliklinik, gezen->durum);
-        gezen = gezen->sonraki;
+        const Hasta **yeni = (const Hasta **)realloc(isaretciler,
+                                                     sizeof(Hasta *) * (size_t)(sayac + 1));
+        if (yeni == NULL) {
+            free(isaretciler);
+            fclose(dosya);
+            printf("Bellek yetersiz, dosya yazilamadi: %s\n", yol);
+            return -1;
+        }
+        isaretciler = yeni;
+        isaretciler[sayac] = gezen;
         sayac++;
+        gezen = gezen->sonraki;
     }
+
+    fprintf(dosya, "tc;ad;yas;poliklinik;durum\n");
+    for (i = sayac - 1; i >= 0; i--) {
+        fprintf(dosya, "%d;%s;%d;%s;%d\n",
+                isaretciler[i]->tc, isaretciler[i]->ad, isaretciler[i]->yas,
+                isaretciler[i]->poliklinik, isaretciler[i]->durum);
+    }
+    free(isaretciler);
 
     fclose(dosya);
     return sayac;

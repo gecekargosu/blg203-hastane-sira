@@ -91,9 +91,11 @@ Kazanılması hedeflenen ek puan: görselleştirme ve sürüm kontrolü hazır, 
 - Hatalı girişler: sayı yerine harf, menüde olmayan numara, olmayan hasta numarası → program çökmüyor
 - Veri dosyası yok → uyarı verip boş kayıtla devam ediyor
 - 1200 kayıt yüklendi, kapanışta 1200 kayıt geri yazıldı
-- Ölçüm: 1000 / 10 000 / 100 000 hasta, arama süresi liste 1,091 → 37 081 ms, ağaç 0,018 → 12,274 ms,
+- Ölçüm: 1000 / 10 000 / 100 000 hasta, arama süresi liste 0,977 → 31 066 ms, ağaç 0,015 → 12,264 ms,
   ağaç yükseklikleri 17 / 26 / 59, sonuçlar `03_Olcum/benchmark.csv` dosyasına program tarafından yazılıyor
 - Veri dosyası karışık sırada tutulur (üreteç sabit tohumla karıştırır), böylece ağaç zincire dönüşmez
 - Silme sırası düzeltildi: ağaç düğümü kayıt serbest bırakılmadan önce kaldırılıyor (use-after-free giderildi)
+- Dosya, kayıtların dosyadaki sırası korunarak yazılır, böylece her oturumda dosya ters dönmez
+- Benchmark bellek yetersizliğinde dosyayı kapatıp temiz çıkıyor, -fanalyzer temiz (0 uyarı)
 - Kuyruk tutarlılığı: mükerrer sıra kaydı, muayenedeki hastanın yeniden sıraya alınması ve silinen hastanın sırada kalması engellendi
 - Bellek: ayırma/serbest bırakma sayacı 1200 kayıtla 2407 / 2405, fark kayıt sayısıyla büyümüyor

@@ -471,10 +471,10 @@ static void benchmark(void) {
 
         if (numaralar == NULL) {
             printf("Bellek yetersiz.\n");
-            return;
             if (csv != NULL) {
                 fclose(csv);
             }
+            return;
         }
 
         /* Karisik sirada numara uret, aksi halde agac zincire doner */
@@ -492,6 +492,19 @@ static void benchmark(void) {
         }
         son = simdi_ms();
         eklemeListe = son - bas;
+
+        /* Bellek yetmezse liste eksik kalir, sonraki adimda isaretci dizisi
+         * NULL uzerinden yuruyup cokerdi. Olcum burada durdurulur. */
+        if (j < n) {
+            printf("Bellek yetersiz, olcum durduruldu.\n");
+            free(numaralar);
+            agac_serbest(agac);
+            kayit_serbest(kayitlar);
+            if (csv != NULL) {
+                fclose(csv);
+            }
+            return;
+        }
 
         /* Agaca ekleme icin listenin tamamini gezmek gerekmiyor,
            dugum isaretcisini tutan bir dizi kullaniyoruz */
