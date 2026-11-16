@@ -551,9 +551,10 @@ kayıtları yazıp kapanır</td><td>Başarılı, akış bitince temiz kapanıyor
       bayrakla izlendi, akış bittiğinde program kayıtları dosyaya yazıp temiz kapanıyor.</li>
   <li><b>Bellek denetimi.</b> Valgrind Windows üzerinde çalışmadığı için ayırma ve serbest
       bırakma çağrıları bağlayıcı sarmalamasıyla (linker wrap) sayıldı. 1200 kayıtla açılış ve
-      kapanışta 2408 ayırma yapıldı, 2405 serbest bırakma sayıldı. Aradaki üç fark, hiç kayıt
-      yüklenmeyen denemede de aynı çıktı; yani bu fark standart kütüphanenin tampon belleği,
-      kayıt sayısıyla büyüyen bir sızıntı yok. Sızıntı avcısı ile araç destekli doğrulama final
+      kapanışta 2407 ayırma yapıldı, 2405 serbest bırakma sayıldı. Kalan iki fark, 12 kayıtlık demo
+      dosyasında 32 ayırma 29 bırakma, hiç kayıt yüklenmeyen denemede ise 8 ayırma 5 bırakma olarak
+      ölçüldü. Yani fark kayıt sayısıyla büyümüyor, iki üç çağrıda sabit kalıyor ve standart
+      kütüphanenin tampon belleğinden geliyor. Sızıntı avcısı ile araç destekli doğrulama final
       sürümüne bırakıldı.</li>
 </ul>
 
