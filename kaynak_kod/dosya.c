@@ -67,11 +67,9 @@ int dosya_oku(const char *yol, Hasta **kayitlar, AgacDugum **agac) {
     }
 
     while (fgets(satir, SATIR_UZUNLUK, dosya) != NULL) {
-        char *tcMetin;
-        char *ad;
-        char *yasMetin;
-        char *poliklinik;
-        char *durumMetin;
+        char *alanlar[5];
+        int alanSayisi = 0;
+        char *gezen = satir;
         int tc = 0;
         int yas = 0;
         int durum = 0;
@@ -84,33 +82,43 @@ int dosya_oku(const char *yol, Hasta **kayitlar, AgacDugum **agac) {
         }
         ilkSatir = 0;
 
-        tcMetin = strtok(satir, ";");
-        ad = strtok(NULL, ";");
-        yasMetin = strtok(NULL, ";");
-        poliklinik = strtok(NULL, ";");
-        durumMetin = strtok(NULL, ";\r\n");
+        satir[strcspn(satir, "\r\n")] = '\0';
 
-        if (tcMetin == NULL || ad == NULL || poliklinik == NULL) {
-            atlanan++;
-            continue;
-        }
-        if (!sayi_alani(tcMetin, &tc) || tc <= 0) {
-            atlanan++;
-            continue;
-        }
-        if (ad[0] == '\0' || poliklinik[0] == '\0') {
-            atlanan++;
-            continue;
-        }
-        if (yasMetin != NULL && yasMetin[0] != '\0') {
-            if (!sayi_alani(yasMetin, &yas) || yas < 0 || yas > YAS_UST) {
-                atlanan++;
-                continue;
+        /* Alanlar elle ayrilir. strtok bos alani atladigi icin
+         * "30001;Ali;30;;0" satirinda poliklinik "0" gorunuyordu.
+         * Burada bos alan da bir alan sayilir ve satir gecersiz olur. */
+        alanlar[alanSayisi++] = gezen;
+        while (*gezen != '\0' && alanSayisi < 5) {
+            if (*gezen == ';') {
+                *gezen = '\0';
+                alanlar[alanSayisi++] = gezen + 1;
             }
+            gezen++;
         }
-        if (durumMetin != NULL && durumMetin[0] != '\0') {
+
+        if (alanSayisi < 5) {
+            atlanan++;              /* eksik alan */
+            continue;
+        }
+        if (!sayi_alani(alanlar[0], &tc) || tc <= 0) {
+            atlanan++;
+            continue;
+        }
+        if (alanlar[1][0] == '\0' || alanlar[3][0] == '\0') {
+            atlanan++;              /* bos ad veya bos poliklinik */
+            continue;
+        }
+        if (alanlar[2][0] != '\0' && !sayi_alani(alanlar[2], &yas)) {
+            atlanan++;
+            continue;
+        }
+        if (yas < 0 || yas > YAS_UST) {
+            atlanan++;
+            continue;
+        }
+        if (alanlar[4][0] != '\0') {
             int okunan = 0;
-            if (!sayi_alani(durumMetin, &okunan) || (okunan != 0 && okunan != 1)) {
+            if (!sayi_alani(alanlar[4], &okunan) || (okunan != 0 && okunan != 1)) {
                 okunan = 0;         /* gecersiz durum "bekliyor" sayilir */
             }
             durum = okunan;
@@ -120,7 +128,7 @@ int dosya_oku(const char *yol, Hasta **kayitlar, AgacDugum **agac) {
             continue;
         }
 
-        *kayitlar = kayit_ekle(*kayitlar, tc, ad, yas, poliklinik, &eklendi);
+        *kayitlar = kayit_ekle(*kayitlar, tc, alanlar[1], yas, alanlar[3], &eklendi);
         if (!eklendi) {
             atlanan++;
             break;                  /* bellek bitti, okumayi surdurmenin anlami yok */

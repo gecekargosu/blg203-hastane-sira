@@ -352,7 +352,7 @@ doğrusal aramadır ve kayıt sayısıyla doğru orantılı büyür. İkili aram
 karşılaştırma arama uzayını yarıya indirir, ortalama durumda logaritmik zamanda sonuç verir.
 Ağacın ikinci görevi sıralı listelemedir. Sıralı dolanma ek bir sıralama algoritması
 gerektirmeden kayıtları numaraya göre artan sırada verir. Ağacın riski, sıralı gelen veride
-zincire dönüşerek aramanın doğrusallaşmasıdır. Bu davranış bölüm 6'da ölçülmüş ve dengeli
+zincire dönüşerek aramanın doğrusallaşmasıdır. Bu davranış henüz ölçülmemiş (sıralı ve ters sıralı ölçüm final sürümüne bırakılmıştır) ve dengeli
 ağaç çalışması final planına alınmıştır.</p>
 
 <h2>3.4 Geri alma için yığıt</h2>
@@ -618,12 +618,18 @@ kayıtları yazıp kapanır</td><td>Başarılı, akış bitince temiz kapanıyor
     <td>Başarılı, muayene sırasından da çıkarıldı mesajı</td></tr>
 <tr><td>17</td><td>Sayı alanına 12abc, yaşa 200, numaraya negatif değer ve 12345678901 taşması</td><td>Hepsi reddedilir</td>
     <td>Başarılı, geçersiz numara ve geçersiz yaş mesajları</td></tr>
-<tr><td>18</td><td>Bozuk CSV, eksik alan, bozuk sayı ve mükerrer numara</td><td>Satırlar atlanır, sayaç yazılır</td>
-    <td>Başarılı, 7 satır atlandı, 1 kayıt yüklendi</td></tr>
+<tr><td>18</td><td>Bozuk CSV, eksik alan, boş alan, bozuk sayı ve mükerrer numara</td><td>Satırlar atlanır, sayaç yazılır</td>
+    <td>Başarılı, 6 satır atlandı, 2 kayıt yüklendi. Boş poliklinik alanı olan satır da atlandı</td></tr>
 <tr><td>19</td><td>Boş veri dosyasıyla açma</td><td>Program çökmez, sıfır kayıtla açılır</td>
     <td>Başarılı, 0 hasta kaydı yüklendi</td></tr>
 <tr><td>20</td><td>--benchmark kipinde ölçüm</td><td>Sonuçlar ekrana ve CSV dosyasına yazılır</td>
     <td>Başarılı, 03_Olcum/benchmark.csv güncellendi</td></tr>
+<tr><td>21</td><td>İki çocuklu düğümü (ağacın kökü) silme</td><td>Ağaç bozulmaz, kayıt bulunamaz, düğüm sayısı bir azalır</td>
+    <td>Başarılı, 31158 silindi, 1199 düğüm ve 21 yükseklik kaldı</td></tr>
+<tr><td>22</td><td>Kaydı silip son işlemi geri alma</td><td>Kayıt durumuyla birlikte geri gelir</td>
+    <td>Başarılı, 30100 tekrar bulundu, durum bekliyor</td></tr>
+<tr><td>23</td><td>Muayenedeki hastanın kaydını silme</td><td>Kayıt silinir, muayene sırası boşalır</td>
+    <td>Başarılı, muayene sırası 0 hasta</td></tr>
 </table>
 
 <h1>9. Karşılaşılan Sorunlar ve Çözümler</h1>
