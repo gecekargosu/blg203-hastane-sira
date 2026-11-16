@@ -744,6 +744,7 @@ bulunmaz.</p>
 <tr><td>veri/</td><td>hastalar.csv (1200 kayıt), demo_hastalar.csv (12 kayıt), veri üreteci</td></tr>
 <tr><td>03_Olcum/</td><td>benchmark.csv, deneysel ölçüm çıktısı, --benchmark kipinde program kendisi yazar</td></tr>
 <tr><td>README.txt</td><td>Derleme, çalıştırma, menü ve veri biçimi açıklaması</td></tr>
+<tr><td>04_YONERGE_UYUM_KONTROL_LISTESI.md</td><td>Yönerge maddelerinin karşılanma durumu</td></tr>
 <tr><td>Rapor.pdf</td><td>Bu rapor</td></tr>
 <tr><td>UML.pdf</td><td>Yapı, modül ve bağımlılık diyagramı</td></tr>
 </table>

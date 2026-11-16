@@ -3,7 +3,7 @@
 Proje: **Hastane Hasta Sıra ve Bekleme Sistemi**
 Öğrenci: Cengiz Kılıç — 251205027
 Belge: `BLG203_Veri_Yapilari_Donem_Projesi_Yonergesi.docx` maddelerinin tek tek karşılanma durumu.
-Son güncelleme: 16 Kasım 2026 (ara teslim)
+Son güncelleme: 16 Kasım 2026 (tur 5, ara teslim)
 
 İşaretler: **VAR** karşılandı · **KISMEN** ara sürümde karşılandı, finalde tamamlanacak · **FINAL** final tesliminde yapılacak (ara raporda zorunlu değil)
 
@@ -65,17 +65,10 @@ Son güncelleme: 16 Kasım 2026 (ara teslim)
 | 1 | Veri yapılarının görselleştirilmesi (ağacın ekrana çizilmesi) | **VAR** | Menü 10, `agac_ciz`, Şekil 6 |
 | 2 | Dengeli ağaç (AVL) veya Trie gibi ileri yapı | FINAL | 12. bölüm planı, 9–10. hafta |
 | 3 | İkiden fazla sıralama algoritmasının karşılaştırılması | FINAL | 11. hafta planı |
-| 4 | Sürüm kontrolü (Git/GitHub) ve düzenli commit geçmişi | **KISMEN** | Yerel git deposu kuruldu, commit geçmişi başlatıldı. GitHub'a gönderme komutu aşağıda |
+| 4 | Sürüm kontrolü (Git/GitHub) ve düzenli commit geçmişi | **VAR** | Depo herkese açık: https://github.com/gecekargosu/blg203-hastane-sira, tur tur commit geçmişi |
 | 5 | Bellek sızıntısının araçla gösterilmesi (Valgrind) | FINAL | Windows'ta Valgrind yok, WSL üzerinden 12. hafta |
 
 Kazanılması hedeflenen ek puan: görselleştirme ve sürüm kontrolü hazır, kalan iki kalem finalde eklenecek.
-
-Git deposunu GitHub'a göndermek için (tek komut, kullanıcı çalıştıracak):
-
-```
-git remote add origin https://github.com/gecekargosu/blg203-hastane-sira.git
-git push -u origin main
-```
 
 ## 6. Teslim Öncesi Kontrol Listesi (Yönerge Bölüm 10)
 
@@ -87,6 +80,7 @@ git push -u origin main
 | Veri dosyaları ZIP içinde ve doğru okunuyor | ☑ 1200 kayıt yüklendi |
 | Raporda karmaşıklık tablosu ve performans grafikleri var | ☑ |
 | Raporda iş bölümü tablosu ve yapay zekâ beyanı var | ☑ |
+| Bozuk CSV, eksik alan, geçersiz giriş senaryoları denendi | ☑ 7 bozuk satır atlandı, geçersiz girişler reddedildi |
 | Demo videosu bağlantısı erişime açık | ☐ finalde |
 | ZIP doğru isimlendirildi ve zamanında yüklendi | ☑ `Cengiz_Kilic_251205027_Yapay_Zeka_ve_Makine_Ogrenmesi.zip` |
 
@@ -97,4 +91,7 @@ git push -u origin main
 - Hatalı girişler: sayı yerine harf, menüde olmayan numara, olmayan hasta numarası → program çökmüyor
 - Veri dosyası yok → uyarı verip boş kayıtla devam ediyor
 - 1200 kayıt yüklendi, kapanışta 1200 kayıt geri yazıldı
-- Ölçüm: 1000 / 10 000 / 100 000 hasta, arama süresi liste 1,38 → 39 404 ms, ağaç 0,024 → 11,417 ms
+- Ölçüm: 1000 / 10 000 / 100 000 hasta, arama süresi liste 1,16 → 31 612 ms, ağaç 0,018 → 16,035 ms,
+  ağaç yükseklikleri 17 / 26 / 59, sonuçlar `03_Olcum/benchmark.csv` dosyasına program tarafından yazılıyor
+- Kuyruk tutarlılığı: mükerrer sıra kaydı, muayenedeki hastanın yeniden sıraya alınması ve silinen hastanın sırada kalması engellendi
+- Bellek: ayırma/serbest bırakma sayacı 1200 kayıtla 2407 / 2405, fark kayıt sayısıyla büyümüyor
