@@ -518,7 +518,8 @@ düğümü iki işaretçi fazladan taşır, kayıt başına yaklaşık 16 bayt e
 <p>Ölçümler programın <code>--benchmark</code> kipinde yapılmıştır. Aynı iş yükü hem bağlı
 listeye hem ikili arama ağacına verilmiş, süreler <code>timespec_get</code> ile milisaniye
 altı çözünürlükte alınmıştır. Anahtarlar sıralı olmadığı için ağaç dengeli kalır. Ölçüm
-ortamı Windows 11, AMD64, gcc 16.2.0, -O2 iyileştirmesi. Ölçümler tek bir oturumda
+ortamı Windows 11, AMD64, Intel Core i7-12700H, 16 GB bellek, gcc 16.2.0, -O2
+iyileştirmesi. Ölçümler tek bir oturumda
 alınmıştır ve program sonuçları <code>03_Olcum/benchmark.csv</code> dosyasına kendisi
 yazar, yani rapordaki tablo ile CSV aynı çalıştırmadan üretilir. Aynı donanımda
 tekrarlanan çalıştırmalarda süreler işletim sistemi yüküne göre yüzde 10 ile 20
@@ -576,14 +577,16 @@ verilmiştir.</p>
 <h1>7. Ekran Çıktıları</h1>
 
 <figure><img src="%(ekran1)s">
-<figcaption>Şekil 4. Açılış, numaraya göre hasta arama ve ağaç üzerinden sıralı listeleme</figcaption></figure>
+<figcaption>Şekil 4. Açılış, numaraya göre hasta arama ve ağaç üzerinden sıralı listeleme.
+Uzunluk nedeniyle tekrar eden menü satırları kısaltılmıştır</figcaption></figure>
 
 <figure><img src="%(ekran2)s">
 <figcaption>Şekil 5. Üç hastanın muayene sırasına alınması ve ilk gelen ilk çıkar sırasıyla
-çağrılması</figcaption></figure>
+çağrılması. Tekrar eden menü satırları kısaltılmıştır</figcaption></figure>
 
 <figure><img src="%(ekran3)s">
-<figcaption>Şekil 6. İkili arama ağacının ekrana yatay çizimi ve dairesel poliklinik turu</figcaption></figure>
+<figcaption>Şekil 6. İkili arama ağacının ekrana yatay çizimi ve dairesel poliklinik turu.
+Tekrar eden menü satırları kısaltılmıştır</figcaption></figure>
 
 <h1>8. Test Senaryoları</h1>
 
@@ -705,11 +708,30 @@ göstermektedir.</p>
 </table>
 
 <h1>11. Yapay Zekâ Kullanım Beyanı</h1>
-<p>Yönerge gereği yapay zekâ araçlarının kullanımı açıkça belirtilmiştir. Metin düzenleme ve
-kod yazımında yapay zekâ destekli bir asistan kullanılmıştır. Asistan, yapı seçimlerinin
-gerekçelendirilmesi, sözde kodların düzenlenmesi ve raporun biçimlendirilmesi aşamalarında
-destek sağlamıştır. Kodun her satırı derlenmiş, çalıştırılmış ve çıktıları bu raporda
-gösterilmiştir. Sunumda kodun tamamı sözlü olarak açıklanacaktır.</p>
+<p>Yönerge gereği yapay zekâ araçlarının kullanımı aşağıda tek tek belirtilmiştir.
+Kullanım alanları tabloda, kodun nasıl doğrulandığı ise tablonun altındaki paragrafta
+yazılıdır.</p>
+
+<table>
+<tr><th style="width:34%%">Kullanım alanı</th><th style="width:66%%">Ne yapıldı</th></tr>
+<tr><td>Veri yapısı seçimi</td>
+    <td>Bağlı liste, kuyruk, ağaç, yığıt ve dairesel liste arasında karşılaştırma yapıldı,
+    hangi yapının hangi işi üstleneceği tartışıldı. Seçim gerekçeleri 3. bölümde yazılı.</td></tr>
+<tr><td>Sözde kod ve algoritma taslağı</td>
+    <td>Ekleme, silme, sıralı dolanma ve geri alma adımlarının taslağı çıkarıldı, ardından
+    C koduna çevrildi ve düzenlendi.</td></tr>
+<tr><td>Hata ayıklama</td>
+    <td>Boş alan ayırıcı sorunu, silme sırasında bellek erişimi sırası ve 12abc gibi harf
+    karışık girdilerin reddi bu aşamada bulunup düzeltildi. Hepsi 9. bölümde yazılı.</td></tr>
+<tr><td>Rapor biçimlendirme</td>
+    <td>Başlık düzeni, tablo ve şekil yerleşimi, içindekiler sayfası.</td></tr>
+<tr><td>Dil ve anlatım</td>
+    <td>Cümlelerin sadeleştirilmesi ve terim birliği.</td></tr>
+</table>
+
+<p>Kodun tamamı derlenmiş, her menü maddesi ayrı ayrı çalıştırılmış ve çıktılar bu rapora
+girmiştir. Derleme <code>-Wall -Wextra</code> ile uyarı vermez. Sunumda kodun tamamı satır satır
+sözlü olarak açıklanacaktır.</p>
 
 <h1>12. Kalan İşler ve Çalışma Planı</h1>
 
