@@ -89,7 +89,6 @@ veri/         hastalar.csv (1200 kayit), demo_hastalar.csv (12 kayit), veri_uret
 README.txt    bu dosya
 Rapor.pdf     ara rapor (12 sayfa)
 UML.pdf       UML yapi diyagrami (1 sayfa)
-04_YONERGE_UYUM_KONTROL_LISTESI.md  yonerge maddelerinin karsilanma durumu
 
 Raporun ve UML'nin uretec betikleri ile ekran goruntuleri depoda 00_Kapak/
 klasorunde tutulur, teslim ZIP'ine konmaz. ZIP icerigi yukaridaki yedi ogeden
