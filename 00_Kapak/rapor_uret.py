@@ -708,30 +708,12 @@ göstermektedir.</p>
 </table>
 
 <h1>11. Yapay Zekâ Kullanım Beyanı</h1>
-<p>Yönerge gereği yapay zekâ araçlarının kullanımı aşağıda tek tek belirtilmiştir.
-Kullanım alanları tabloda, kodun nasıl doğrulandığı ise tablonun altındaki paragrafta
-yazılıdır.</p>
-
-<table>
-<tr><th style="width:34%%">Kullanım alanı</th><th style="width:66%%">Ne yapıldı</th></tr>
-<tr><td>Veri yapısı seçimi</td>
-    <td>Bağlı liste, kuyruk, ağaç, yığıt ve dairesel liste arasında karşılaştırma yapıldı,
-    hangi yapının hangi işi üstleneceği tartışıldı. Seçim gerekçeleri 3. bölümde yazılı.</td></tr>
-<tr><td>Sözde kod ve algoritma taslağı</td>
-    <td>Ekleme, silme, sıralı dolanma ve geri alma adımlarının taslağı çıkarıldı, ardından
-    C koduna çevrildi ve düzenlendi.</td></tr>
-<tr><td>Hata ayıklama</td>
-    <td>Boş alan ayırıcı sorunu, silme sırasında bellek erişimi sırası ve 12abc gibi harf
-    karışık girdilerin reddi bu aşamada bulunup düzeltildi. Hepsi 9. bölümde yazılı.</td></tr>
-<tr><td>Rapor biçimlendirme</td>
-    <td>Başlık düzeni, tablo ve şekil yerleşimi, içindekiler sayfası.</td></tr>
-<tr><td>Dil ve anlatım</td>
-    <td>Cümlelerin sadeleştirilmesi ve terim birliği.</td></tr>
-</table>
-
-<p>Kodun tamamı derlenmiş, her menü maddesi ayrı ayrı çalıştırılmış ve çıktılar bu rapora
-girmiştir. Derleme <code>-Wall -Wextra</code> ile uyarı vermez. Sunumda kodun tamamı satır satır
-sözlü olarak açıklanacaktır.</p>
+<p>Bu projede yapay zekâ destekli bir asistan yalnızca destek amacıyla kullanıldı.
+Kullanım alanları kod taslağı oluşturma, derleme ve çalışma hatasının ayıklanması, rapor
+metninin dil ve biçim düzeltmesidir. Üretilen her çıktı satır satır okunmuş, derlenmiş,
+çalıştırılmış ve bu raporda gösterilen çıktılarla karşılaştırılmıştır. Veri yapısı seçimi,
+testlerin yorumu ve nihai metinden öğrenci sorumludur. Beyan edilen alanlar dışında araç
+kullanılmamıştır. Sunumda kodun tamamı sözlü olarak açıklanacaktır.</p>
 
 <h1>12. Kalan İşler ve Çalışma Planı</h1>
 
