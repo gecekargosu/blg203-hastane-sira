@@ -208,7 +208,7 @@ HTML = """<!doctype html>
     <tr><td class="b">Grup No</td><td>— (bireysel proje)</td></tr>
     <tr><td class="b">Proje Türü</td><td>Bireysel proje</td></tr>
     <tr><td class="b">Programlama Dili</td><td>C (C11)</td></tr>
-    <tr><td class="b">Teslim Tarihi</td><td>16 Kasım 2026</td></tr>
+    <tr><td class="b">Teslim Tarihi</td><td>22 Kasım 2026</td></tr>
   </table>
 
   <div class="tarih">Kasım 2026</div>
@@ -381,16 +381,13 @@ yeniden ilkine dönülür. Dairesel listede son düğümün işaretçisi ilk dü
 bu dönüş ayrı bir koşul gerektirmez, ilerleme tek atama ile yapılır. Tek yönlü düz liste
 kullanılsaydı her turda sonun denetlenmesi ve başın yeniden bulunması gerekirdi.</p>
 
-<h2>3.6 Modül yapısı</h2>
+<h2>3.6 Modül yapısı ve dosya görevleri</h2>
+<p>Kod yedi modüle ayrılmıştır. Her modülün bir başlık dosyası ve bir kaynak dosyası vardır,
+menü dosyası dışında hiçbir dosya doğrudan ekrana yazmaz. Satır sayıları kaynak koddan
+okunur, elle yazılmamıştır.</p>
 <table>
-<tr><th style="width:22%%">Dosya</th><th>Sorumluluk</th></tr>
-<tr><td>hasta.h / hasta.c</td><td>Hasta kaydı ve kayıt defteri bağlı listesi işlemleri</td></tr>
-<tr><td>kuyruk.h / kuyruk.c</td><td>Muayene bekleme sırası, ilk gelen ilk çıkar</td></tr>
-<tr><td>agac.h / agac.c</td><td>İkili arama ağacı, ekleme, arama, silme, sıralı dolanma, çizim</td></tr>
-<tr><td>yigit.h / yigit.c</td><td>Geri alma yığıtı</td></tr>
-<tr><td>dairesel.h / dairesel.c</td><td>Dairesel bağlı liste ile poliklinik turu</td></tr>
-<tr><td>dosya.h / dosya.c</td><td>Veri dosyasını okuma ve yazma</td></tr>
-<tr><td>main.c</td><td>Menü, iş akışları ve deneysel ölçüm modu</td></tr>
+<tr><th style="width:24%%">Dosya</th><th style="width:12%%">Satır</th><th>Sorumluluk</th></tr>
+%(modul_tablo)s
 </table>
 
 <h2>3.7 Alternatif yapılarla karşılaştırma</h2>
@@ -769,7 +766,6 @@ bulunmaz.</p>
 <tr><td>veri/</td><td>hastalar.csv (1200 kayıt), demo_hastalar.csv (12 kayıt), veri üreteci</td></tr>
 <tr><td>03_Olcum/</td><td>benchmark.csv, deneysel ölçüm çıktısı, --benchmark kipinde program kendisi yazar</td></tr>
 <tr><td>README.txt</td><td>Derleme, çalıştırma, menü ve veri biçimi açıklaması</td></tr>
-<tr><td>04_YONERGE_UYUM_KONTROL_LISTESI.md</td><td>Yönerge maddelerinin karşılanma durumu</td></tr>
 <tr><td>Rapor.pdf</td><td>Bu rapor</td></tr>
 <tr><td>UML.pdf</td><td>Yapı, modül ve bağımlılık diyagramı</td></tr>
 </table>
@@ -781,11 +777,49 @@ github.com/gecekargosu/blg203-hastane-sira</p>
 """
 
 
+KOD_GOREV = {
+    "agac.h": "İkili arama ağacı düğüm yapısı ve işlev bildirimleri",
+    "agac.c": "Ağaca ekleme, arama, silme, sıralı dolanma ve ekrana çizim",
+    "dairesel.h": "Nöbetçi poliklinik listesi bildirimleri",
+    "dairesel.c": "Dairesel bağlı liste kurma ve tur ilerletme",
+    "dosya.h": "Veri dosyası okuma ve yazma bildirimleri",
+    "dosya.c": "CSV okuma, bozuk satır atlama, kapanışta geri yazma",
+    "hasta.h": "Hasta kaydı yapısı ve kayıt defteri bildirimleri",
+    "hasta.c": "Bağlı listeye ekleme, silme, numaraya göre arama, bellek bırakma",
+    "kuyruk.h": "Muayene sırası kuyruğu bildirimleri",
+    "kuyruk.c": "Kuyruğa ekleme, sıradaki hastayı çağırma, sıra sorgulama",
+    "main.c": "Menü, iş akışları, deneysel ölçüm kipi ve girdi doğrulama",
+    "yigit.h": "Geri alma yığıtı bildirimleri",
+    "yigit.c": "Yığıta işlem ekleme ve geri alma kaydını çıkarma",
+}
+
+
+def modul_tablosu():
+    """Kaynak dosyalari satir sayisi ve sorumluluklariyla listeler."""
+    kok = os.path.join(KOK, "kaynak_kod")
+    satirlar = []
+    toplam = 0
+    adet = 0
+    for ad in sorted(os.listdir(kok)):
+        if not (ad.endswith(".c") or ad.endswith(".h")):
+            continue
+        with open(os.path.join(kok, ad), encoding="utf-8") as dosya:
+            satir = len(dosya.read().splitlines())
+        toplam += satir
+        adet += 1
+        satirlar.append("<tr><td>%s</td><td>%d</td><td>%s</td></tr>"
+                        % (ad, satir, KOD_GOREV.get(ad, "")))
+    satirlar.append("<tr><td><b>Toplam</b></td><td><b>%d</b></td>"
+                    "<td>%d dosya, 7 modül</td></tr>" % (toplam, adet))
+    return "\n".join(satirlar)
+
+
 def html_uret(veri, icindekiler="<!--TOC-->"):
     """Rapor govdesini HTML olarak uretir, icindekiler icin yer tutucu birakir."""
     return HTML % {
         "css": CSS,
         "icindekiler": icindekiler,
+        "modul_tablo": modul_tablosu(),
         "logo": "file:///" + os.path.join(KOK, "00_Kapak", "assets", "logo.png").replace("\\", "/"),
         "tablo": tablo_html(veri),
         "kat_liste": "{:,}".format(int(round(veri[-1]["ar_liste"] / veri[0]["ar_liste"]))).replace(",", " "),
