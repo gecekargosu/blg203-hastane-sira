@@ -208,7 +208,7 @@ HTML = """<!doctype html>
     <tr><td class="b">Grup No</td><td>— (bireysel proje)</td></tr>
     <tr><td class="b">Proje Türü</td><td>Bireysel proje</td></tr>
     <tr><td class="b">Programlama Dili</td><td>C (C11)</td></tr>
-    <tr><td class="b">Teslim Tarihi</td><td>22 Kasım 2026</td></tr>
+    <tr><td class="b">Teslim Tarihi</td><td>16 Kasım 2026</td></tr>
   </table>
 
   <div class="tarih">Kasım 2026</div>
