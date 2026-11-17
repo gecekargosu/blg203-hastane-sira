@@ -5,6 +5,7 @@ Kullanim: python 00_Kapak/rapor_uret.py
 """
 import math
 import os
+import re
 import subprocess
 import tempfile
 
@@ -174,6 +175,15 @@ figcaption { font-size: 9pt; color: #333; margin-top: 3pt; text-align: center; }
 .kapak td { border: none; padding: 2.6pt 4pt; }
 .kapak td.b { text-align: right; font-weight: bold; width: 4.6cm; }
 .kapak .tarih { margin-top: 1.3cm; font-size: 11pt; }
+
+/* Icindekiler */
+.icindekiler { page-break-after: always; }
+.toc { width: 100%; border-collapse: collapse; margin: 6pt 0 0 0; font-size: 10.6pt; }
+.toc td { border: none; padding: 2.1pt 0; vertical-align: bottom; }
+.toc td.bas { border-bottom: 0.4pt dotted #c9c9c9; }
+.toc td.no { width: 14mm; text-align: right; }
+.toc tr.d1 td { font-weight: bold; padding-top: 7pt; color: #16365c; }
+.toc tr.d2 td { padding-left: 8mm; }
 """
 
 HTML = """<!doctype html>
@@ -203,6 +213,8 @@ HTML = """<!doctype html>
 
   <div class="tarih">Kasım 2026</div>
 </div>
+
+%(icindekiler)s
 
 <h1>1. Problem Tanımı</h1>
 
@@ -769,10 +781,11 @@ github.com/gecekargosu/blg203-hastane-sira</p>
 """
 
 
-def rapor_uret():
-    veri = olcum_tablosu()
-    html = HTML % {
+def html_uret(veri, icindekiler="<!--TOC-->"):
+    """Rapor govdesini HTML olarak uretir, icindekiler icin yer tutucu birakir."""
+    return HTML % {
         "css": CSS,
+        "icindekiler": icindekiler,
         "logo": "file:///" + os.path.join(KOK, "00_Kapak", "assets", "logo.png").replace("\\", "/"),
         "tablo": tablo_html(veri),
         "kat_liste": "{:,}".format(int(round(veri[-1]["ar_liste"] / veri[0]["ar_liste"]))).replace(",", " "),
@@ -787,19 +800,98 @@ def rapor_uret():
         "ekran3": "file:///" + os.path.join(KOK, "00_Kapak", "ekran", "ekran3.png").replace("\\", "/"),
     }
 
+
+BASLIK_DESEN = re.compile(r"<h([12])[^>]*>(.*?)</h\1>", re.S)
+
+
+def sadelestir(metin):
+    """Etiketleri temizler, bosluklari tek bosluga indirir."""
+    metin = re.sub(r"<[^>]+>", "", metin)
+    metin = metin.replace("\u00ad", "").replace("\xa0", " ")
+    return re.sub(r"\s+", " ", metin).strip()
+
+
+def baslik_listesi(html_metni):
+    """Icindekiler icin h1 ve h2 basliklarini sirayla toplar."""
+    liste = []
+    for bulunan in BASLIK_DESEN.finditer(html_metni):
+        metin = sadelestir(bulunan.group(2))
+        if metin and metin != "İçindekiler":
+            liste.append((int(bulunan.group(1)), metin))
+    return liste
+
+
+def icindekiler_html(basliklar, sayfalar):
+    """Baslik ve sayfa numaralarindan icindekiler tablosu uretir."""
+    satirlar = []
+    for seviye, metin in basliklar:
+        no = sayfalar.get(metin, "")
+        satirlar.append(
+            '<tr class="d%d"><td class="bas">%s</td><td class="no">%s</td></tr>'
+            % (seviye, metin.replace("&", "&amp;"), no)
+        )
+    return (
+        '<div class="icindekiler"><h1>İçindekiler</h1>'
+        '<table class="toc">%s</table></div>' % "\n".join(satirlar)
+    )
+
+
+def pdf_bas(html_metni, hedef):
+    """HTML'i Chrome ile A4 PDF'e basar, hedef yolu dondurur."""
     gecici_html = os.path.join(KOK, "00_Kapak", "rapor.html")
     with open(gecici_html, "w", encoding="utf-8") as dosya:
-        dosya.write(html)
-
+        dosya.write(html_metni)
     subprocess.run([
         CHROME, "--headless=new", "--disable-gpu", "--no-sandbox",
         "--user-data-dir=" + os.path.join(tempfile.gettempdir(), "chrome_pdf_profil"),
-        "--no-pdf-header-footer", "--print-to-pdf=" + GECICI_PDF,
+        "--no-pdf-header-footer", "--print-to-pdf=" + hedef,
         "file:///" + gecici_html.replace("\\", "/"),
     ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    if not os.path.exists(hedef):
+        raise SystemExit("HATA: PDF uretilemedi")
+    return hedef
 
-    altbilgi_bas(GECICI_PDF, HEDEF_PDF)
-    print("rapor yazildi:", HEDEF_PDF)
+
+def sayfa_bul(ham, basliklar):
+    """Her basligin gorundugu fiziksel sayfa indeksini bulur, kapak 0 sayilir.
+
+    Icindekiler sayfasi da basliklari tasidigi icin atlanir.
+    """
+    okuyucu = pypdf.PdfReader(ham)
+    sayfalar = [sadelestir(sayfa.extract_text() or "") for sayfa in okuyucu.pages]
+    atla = {i for i, metin in enumerate(sayfalar) if metin.startswith("İçindekiler")}
+    sonuc = {}
+    for _, baslik in basliklar:
+        aranan = baslik[:48]
+        for i in range(1, len(sayfalar)):
+            if i in atla:
+                continue
+            if aranan in sayfalar[i]:
+                sonuc[baslik] = i
+                break
+        else:
+            raise SystemExit("Baslik sayfada bulunamadi: %s" % baslik)
+    return sonuc
+
+
+def rapor_uret():
+    veri = olcum_tablosu()
+    temel = html_uret(veri)
+    basliklar = baslik_listesi(temel.replace("<!--TOC-->", ""))
+
+    # Ilk gecis bos numaralarla basilir, sayfa duzeni son halle ayni kalir.
+    bos = temel.replace("<!--TOC-->", icindekiler_html(basliklar, {}))
+    ham = pdf_bas(bos, os.path.join(tempfile.gettempdir(), "blg203_gecis1.pdf"))
+    sayfalar = sayfa_bul(ham, basliklar)
+
+    son = temel.replace("<!--TOC-->", icindekiler_html(basliklar, sayfalar))
+    ham = pdf_bas(son, os.path.join(tempfile.gettempdir(), "blg203_gecis2.pdf"))
+    dogrulama = sayfa_bul(ham, basliklar)
+    if dogrulama != sayfalar:
+        raise SystemExit("HATA: icindekiler sayfa numaralari kararli degil")
+
+    altbilgi_bas(ham, HEDEF_PDF)
+    print("rapor yazildi:", HEDEF_PDF, "|", len(dogrulama), "baslik")
 
 
 def altbilgi_bas(kaynak, hedef):
@@ -809,6 +901,9 @@ def altbilgi_bas(kaynak, hedef):
     yazici = pypdf.PdfWriter()
 
     for i, sayfa in enumerate(okuyucu.pages):
+        if i == 0:
+            yazici.add_page(sayfa)
+            continue
         genislik = float(sayfa.mediabox.width)
         gecici = os.path.join(tempfile.gettempdir(), "altbilgi_%d.pdf" % i)
         cizim = canvas.Canvas(gecici, pagesize=(genislik, float(sayfa.mediabox.height)))
@@ -818,7 +913,7 @@ def altbilgi_bas(kaynak, hedef):
         cizim.line(56, 30, genislik - 56, 30)
         cizim.setFillColorRGB(0.28, 0.33, 0.40)
         cizim.drawString(56, 21, BASLIK)
-        cizim.drawRightString(genislik - 56, 21, "Sayfa %d / %d" % (i + 1, toplam))
+        cizim.drawRightString(genislik - 56, 21, "Sayfa %d / %d" % (i, toplam - 1))
         cizim.save()
 
         kaplama = pypdf.PdfReader(gecici).pages[0]
