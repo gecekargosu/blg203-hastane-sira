@@ -87,7 +87,7 @@ kaynak_kod/   13 kaynak dosya, 7 .c ve 6 .h (derlenmiş dosya yoktur)
 veri/         hastalar.csv (1200 kayıt), demo_hastalar.csv (12 kayıt), veri_uret.py
 03_Olcum/     benchmark.csv, --benchmark kipinde program tarafından yazılır
 README.txt    bu dosya
-Rapor.pdf     ara rapor (15 sayfa)
+Rapor.pdf     ara rapor (14 sayfa)
 UML.pdf       yapı, modül ve bağımlılık diyagramı
 
 Raporun ve UML'nin üreteç betikleri ile ekran görüntüleri depoda 00_Kapak/
