@@ -57,7 +57,7 @@ dizinine göre arar, bu nedenle proje kök dizininden çalıştırılmalıdır.
 ## Klasör yapısı
 
 ```
-Rapor.pdf      ara rapor, 15 sayfa
+Rapor.pdf      ara rapor, 14 sayfa
 UML.pdf        yapı, modül ve bağımlılık diyagramı
 README.txt     kullanım kılavuzu (paket içi sürüm)
 kaynak_kod/    13 dosya, 7 .c ve 6 .h

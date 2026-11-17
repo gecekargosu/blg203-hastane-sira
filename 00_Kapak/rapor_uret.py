@@ -664,7 +664,7 @@ kayıtları yazıp kapanır</td><td>Başarılı, akış bitince temiz kapanıyor
       silindiğinde sıradaki hasta da kaybolurdu. Kuyruk düğümü numara ve adı kendi
       içinde saklayacak biçimde tasarlandı.</li>
   <li><b>Girdi akışı bitince sonsuz döngü.</b> Girdi kesildiğinde <code>fgets</code> boş dönüyor,
-      menü bunu geçersiz seçim sayıp kendini tekrar yazıyordu; program durmuyordu. Girdi bitişi ayrı bir
+      menü bunu geçersiz seçim sayıp kendini tekrar yazıyordu. Program durmuyordu. Girdi bitişi ayrı bir
       bayrakla izlendi, akış bittiğinde program kayıtları dosyaya yazıp temiz kapanıyor.</li>
   <li><b>Bellek ayrılamadığında sessiz başarı.</b> <code>kayit_ekle</code> bellek ayıramadığında
       eski listeyi döndürüyor, çağıran ise işlemi başarılı sanıyordu. Üç ekleme işlevi

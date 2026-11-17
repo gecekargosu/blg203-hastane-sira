@@ -91,7 +91,7 @@ Rapor.pdf     ara rapor (14 sayfa)
 UML.pdf       yapı, modül ve bağımlılık diyagramı
 
 Raporun ve UML'nin üreteç betikleri ile ekran görüntüleri depoda 00_Kapak/
-klasöründe tutulur, teslim ZIP'ine konmaz. ZIP içeriği yukarıdaki yedi ögeden
+klasöründe tutulur, teslim ZIP'ine konmaz. ZIP içeriği yukarıdaki altı ögeden
 oluşur.
 
 ------------------------------------------------------------------------
