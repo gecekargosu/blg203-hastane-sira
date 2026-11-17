@@ -4,14 +4,6 @@
 #include "hasta.h"
 
 /*
- * Yeni hasta kaydini listenin basina ekler. Basa ekleme sabit zamanli
- * oldugu icin toplu yuklemede tercih edildi. Kullaniciya gosterilen
- * sirali liste agac uzerinden uretilir.
- *
- * Bellek ayrilamazsa liste degismez ve *basarili 0 yapilir. Cagiran
- * taraf bu durumda agaca veya yigita NULL kayit gondermez.
- */
-/*
  * Metni hedefe kopyalar, CSV ayiricisi olan noktali virgulu virgule cevirir.
  * Boylece kullanici adina noktali virgul yazsa da dosya bicimi bozulmaz.
  */
@@ -29,6 +21,14 @@ static void csv_metin_kopyala(char *hedef, int uzunluk, const char *kaynak) {
     hedef[i] = '\0';
 }
 
+/*
+ * Yeni hasta kaydini listenin basina ekler. Basa ekleme sabit zamanli
+ * oldugu icin toplu yuklemede tercih edildi. Kullaniciya gosterilen
+ * sirali liste agac uzerinden uretilir.
+ *
+ * Bellek ayrilamazsa liste degismez ve *basarili 0 yapilir. Cagiran
+ * taraf bu durumda agaca veya yigita NULL kayit gondermez.
+ */
 Hasta *kayit_ekle(Hasta *bas, int tc, const char *ad, int yas,
                   const char *poliklinik, int *basarili) {
     Hasta *yeni = (Hasta *)malloc(sizeof(Hasta));
