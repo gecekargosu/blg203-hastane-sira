@@ -250,7 +250,11 @@ int main(int argc, char **argv) {
     }
 
     kayit = dosya_yaz(veriYolu, kayitlar);
-    printf("%d kayit dosyaya yazildi. Program kapatiliyor.\n", kayit);
+    if (kayit < 0) {
+        printf("Kayitlar dosyaya yazilamadi. Program kapatiliyor.\n");
+    } else {
+        printf("%d kayit dosyaya yazildi. Program kapatiliyor.\n", kayit);
+    }
 
     /* Bellek temizligi: her yapi kendi dugumlerini birakir */
     yigit_serbest(yigit);
