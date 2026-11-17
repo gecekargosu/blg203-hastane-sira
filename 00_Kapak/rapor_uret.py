@@ -127,9 +127,9 @@ CSS = """
 * { box-sizing: border-box; }
 body { font-family: "Times New Roman", serif; font-size: 11pt; line-height: 1.15;
        color: #111; margin: 0; }
-p { margin: 0 0 6pt 0; text-align: justify; }
+p { margin: 0 0 6pt 0; text-align: justify; orphans: 2; widows: 2; }
 h1 { font-size: 13pt; color: #16365c; margin: 14pt 0 6pt 0; border-bottom: 1px solid #b9c7d8;
-     padding-bottom: 2pt; page-break-after: avoid; }
+     padding-bottom: 2pt; page-break-after: avoid; break-after: avoid; }
 h2 { font-size: 11.5pt; color: #1f4e79; margin: 10pt 0 4pt 0; page-break-after: avoid; }
 ul, ol { margin: 0 0 7pt 0; padding-left: 16pt; }
 li { margin-bottom: 2.5pt; text-align: justify; }
@@ -138,6 +138,12 @@ table { border-collapse: collapse; width: 100%; font-size: 9.3pt; margin: 4pt 0 
 th { background: #e8eef5; border: 0.6pt solid #8fa8c0; padding: 3pt 4pt; text-align: left;
      font-weight: bold; }
 td { border: 0.6pt solid #a8b8c8; padding: 2.6pt 4pt; vertical-align: top; }
+tr { page-break-inside: avoid; break-inside: avoid; }
+thead { display: table-header-group; }
+.blok { page-break-inside: avoid; break-inside: avoid; }
+tbody { page-break-inside: auto; break-inside: auto; }
+.toc, .kapak table { page-break-inside: auto; break-inside: auto; }
+
 code, pre { font-family: Consolas, "Courier New", monospace; }
 pre { font-size: 8.6pt; background: #f4f6f8; border: 0.5pt solid #ccd6e0; border-left: 3pt solid #1f4e79;
       padding: 5pt 7pt; margin: 3pt 0 9pt 0; line-height: 1.25; white-space: pre-wrap;
@@ -874,8 +880,48 @@ def icindekiler_html(basliklar, sayfalar):
     )
 
 
+
+
+BLOK_DESEN = re.compile(
+    r"(<h[12][^>]*>[^<]*</h[12]>)"
+    r"((?:\s*<p[^>]*>(?:(?!</p>)(?!<h[12])(?!<table).)*</p>)?)"
+    r"(\s*<table>.*?</table>)",
+    re.S,
+)
+
+
+def blok_sar(html_metni):
+    """Baslik, aciklamasi ve tablosunu tek blok yapar.
+
+    Blok tek sayfaya sigdigi surece bolunmez, sigmadiginda butun halinde
+    sonraki sayfaya gecer. Baslik sayfa dibinde yalniz kalmaz.
+    """
+    return BLOK_DESEN.sub(
+        lambda b: '<div class="blok">%s%s%s</div>' % (b.group(1), b.group(2), b.group(3)),
+        html_metni,
+    )
+
+
+def tablo_duzenle(html_metni):
+    """Ilk satiri baslik olan tabloyu thead ve tbody olarak ayirir.
+
+    Bolunmek zorunda kalan uzun tabloda baslik satiri her sayfada tekrarlanir.
+    """
+    def isle(bulunan):
+        govde = bulunan.group(1)
+        ilk = re.search(r"<tr[^>]*>.*?</tr>", govde, re.S)
+        if not ilk or "<th" not in ilk.group(0):
+            return bulunan.group(0)
+        bas = ilk.group(0)
+        kalan = govde[govde.index(bas) + len(bas):]
+        return "<table><thead>%s</thead><tbody>%s</tbody></table>" % (bas, kalan)
+
+    return blok_sar(re.sub(r"<table>(.*?)</table>", isle, html_metni, flags=re.S))
+
+
 def pdf_bas(html_metni, hedef):
     """HTML'i Chrome ile A4 PDF'e basar, hedef yolu dondurur."""
+    html_metni = tablo_duzenle(html_metni)
     gecici_html = os.path.join(KOK, "00_Kapak", "rapor.html")
     with open(gecici_html, "w", encoding="utf-8") as dosya:
         dosya.write(html_metni)
