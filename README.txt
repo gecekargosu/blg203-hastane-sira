@@ -1,109 +1,116 @@
-HASTANE HASTA SIRA VE BEKLEME SISTEMI
-BLG203 Veri Yapilari Donem Projesi - Ara Teslim
-Cengiz Kilic - 251205027 - Yapay Zeka ve Makine Ogrenmesi
+HASTANE HASTA SIRA VE BEKLEME SİSTEMİ
+BLG203 Veri Yapıları Dönem Projesi, Ara Teslim
+Cengiz Kılıç, 251205027, Yapay Zekâ ve Makine Öğrenmesi
 
 ------------------------------------------------------------------------
-1. PROJENIN AMACI
+1. PROJENİN AMACI
 ------------------------------------------------------------------------
-Hastane kayitlarini TXT/CSV dosyasindan okuyup bellekte bagli liste ve
-kuyruk veri yapilariyla yonetmek. Program yeni hasta ekleme, siradaki
-hastayi cagirma, hasta arama ve farkli veri boyutlarinda arama
-performansinin olculmesini saglar.
+Hastane kayıtlarını TXT/CSV dosyasından okuyup bellekte bağlı liste, kuyruk
+ve ağaç veri yapılarıyla yönetmek. Program yeni hasta ekleme, sıradaki
+hastayı çağırma, hasta arama ve farklı veri boyutlarında arama
+performansının ölçülmesini sağlar.
 
-Kullanilan veri yapilari (dersin 1-7. hafta konulari):
-  - Tek yonlu bagli liste : hasta kayit defteri
-  - Kuyruk (FIFO)         : muayene bekleme sirasi
-  - Ikili arama agaci     : numaraya gore arama, sirali listeleme
-  - Yigit                 : son islemi geri alma
-  - Dairesel bagli liste  : nobetci poliklinik turu
+Kullanılan veri yapıları (dersin 1-7. hafta konuları):
+  - Tek yönlü bağlı liste : hasta kayıt defteri
+  - Kuyruk (FIFO)         : muayene bekleme sırası
+  - İkili arama ağacı     : numaraya göre arama, sıralı listeleme
+  - Yığıt                 : son işlemi geri alma
+  - Dairesel bağlı liste  : nöbetçi poliklinik turu
 
 ------------------------------------------------------------------------
 2. DERLEME
 ------------------------------------------------------------------------
 Derleyici : gcc 16.2.0 (MinGW-W64, x86_64-ucrt-posix-seh)
 Dil       : C11
-Komut satiri (proje kok dizininde calistirin):
+Komut satırı (proje kök dizininde çalıştırın):
 
     gcc -std=c11 -Wall -Wextra -O2 -o hastane.exe kaynak_kod/*.c
 
-Derleme sonucunda uyari uretmez. Visual Studio kullanilacaksa tum .c
-dosyalari tek projeye eklenip Console Application olarak derlenebilir.
-MSVC icin /W4 anahtari onerilir.
+Derleme uyarı üretmez. Visual Studio kullanılacaksa tüm .c dosyaları tek
+projeye eklenip Console Application olarak derlenebilir. MSVC için /W4
+anahtarı önerilir.
 
 ------------------------------------------------------------------------
-3. CALISTIRMA
+3. ÇALIŞTIRMA
 ------------------------------------------------------------------------
-    hastane.exe                            -> 1200 kayitlik veri ile acilir
-    hastane.exe veri/demo_hastalar.csv     -> 12 kayitlik demo verisi
-    hastane.exe --benchmark                -> deneysel olcumu calistirir
+    hastane.exe                            -> 1200 kayıtlık veri ile açılır
+    hastane.exe veri/demo_hastalar.csv     -> 12 kayıtlık demo verisi
+    hastane.exe --benchmark                -> deneysel ölçümü çalıştırır
 
-Onemli: program veri dosyasini calisma dizinine gore arar, bu nedenle
-proje kok dizininden calistirilmalidir.
+Önemli: program veri dosyasını çalışma dizinine göre arar, bu nedenle proje
+kök dizininden çalıştırılmalıdır.
 
 ------------------------------------------------------------------------
-4. MENU
+4. MENÜ
 ------------------------------------------------------------------------
- 1) Hasta kaydi ekle
- 2) Hasta kaydi sil
- 3) Numaraya gore hasta ara (agac)
- 4) Kayitlari sirali listele (agac)
- 5) Kayitlari liste sirasinda goster (bagli liste)
- 6) Siraya hasta ekle (kuyruk)
- 7) Siradaki hastayi cagir
+ 1) Hasta kaydı ekle
+ 2) Hasta kaydı sil
+ 3) Numaraya göre hasta ara (ağaç)
+ 4) Kayıtları sıralı listele (ağaç)
+ 5) Kayıtları liste sırasında göster (bağlı liste)
+ 6) Sıraya hasta ekle (kuyruk)
+ 7) Sıradaki hastayı çağır
  8) Muayeneyi bitir
- 9) Son islemi geri al (yigit)
-10) Agaci ekrana ciz
-11) Nobetci poliklinik turu (dairesel liste)
-12) Muayene sirasini goster
- 0) Cikis (kayitlar dosyaya yazilir)
+ 9) Son işlemi geri al (yığıt)
+10) Ağacı ekrana çiz
+11) Nöbetçi poliklinik turu (dairesel liste)
+12) Muayene sırasını göster
+ 0) Çıkış (kayıtlar dosyaya yazılır)
 
 ------------------------------------------------------------------------
-5. VERI DOSYASI BICIMI
+5. VERİ DOSYASI BİÇİMİ
 ------------------------------------------------------------------------
-Alanlar noktali virgul ile ayrilir, ilk satir basliktir:
+Alanlar noktalı virgül ile ayrılır, ilk satır başlıktır:
 
     tc;ad;yas;poliklinik;durum
-    30001;Ayse Yilmaz;54;Dahiliye;0
-    30002;Emine Aydin;31;Dermatoloji;0
+    30001;Ayşe Yılmaz;54;Dahiliye;0
+    30002;Emine Aydın;31;Dermatoloji;0
 
 durum: 0 bekliyor, 1 muayenede
 
-Dosya: veri/hastalar.csv (1200 kayit), veri/demo_hastalar.csv (12 kayit)
-Yeniden uretmek icin: python veri/veri_uret.py
+Dosya: veri/hastalar.csv (1200 kayıt), veri/demo_hastalar.csv (12 kayıt)
+Yeniden üretmek için: python veri/veri_uret.py
 
-Okuma sirasinda eksik alan, bozuk sayi veya mukerrer numara tasiyan satirlar
-atlanir ve atlanan satir sayisi ekrana yazilir. Ad veya poliklinik icindeki
-noktali virgul yazilirken virgule cevrilir, boylece dosya bicimi bozulmaz.
-Kayitlar dosyada karisik sirada tutulur, sirali dosya ikili arama agacini
-zincire cevirdigi icin uretec kayitlari sabit tohumla karistirir.
+Okuma sırasında eksik alan, bozuk sayı veya mükerrer numara taşıyan satırlar
+atlanır ve atlanan satır sayısı ekrana yazılır. Ad veya poliklinik içindeki
+noktalı virgül yazılırken virgüle çevrilir, böylece dosya biçimi bozulmaz.
+Kayıtlar dosyada karışık sırada tutulur, sıralı dosya ikili arama ağacını
+zincire çevirdiği için üreteç kayıtları sabit tohumla karıştırır.
 
-Giris kurali: numara pozitif tam sayi, yas 0 ile 130 arasi olmalidir. 12abc gibi
-harf karisik girdiler, bos ad ve bos poliklinik reddedilir.
+Giriş kuralı: numara pozitif tam sayı, yaş 0 ile 130 arası olmalıdır. 12abc
+gibi harf karışık girdiler, boş ad ve boş poliklinik reddedilir.
 
 ------------------------------------------------------------------------
-6. DOSYA DUZENI
+6. DOSYA DÜZENİ
 ------------------------------------------------------------------------
-kaynak_kod/   13 kaynak dosya, 7 .c ve 6 .h (derlenmis dosya yoktur)
-veri/         hastalar.csv (1200 kayit), demo_hastalar.csv (12 kayit), veri_uret.py
-03_Olcum/     benchmark.csv, --benchmark kipinde program tarafindan yazilir
+kaynak_kod/   13 kaynak dosya, 7 .c ve 6 .h (derlenmiş dosya yoktur)
+veri/         hastalar.csv (1200 kayıt), demo_hastalar.csv (12 kayıt), veri_uret.py
+03_Olcum/     benchmark.csv, --benchmark kipinde program tarafından yazılır
 README.txt    bu dosya
-Rapor.pdf     ara rapor (12 sayfa)
-UML.pdf       UML yapi diyagrami (1 sayfa)
+Rapor.pdf     ara rapor (13 sayfa)
+UML.pdf       yapı, modül ve bağımlılık diyagramı
 
-Raporun ve UML'nin uretec betikleri ile ekran goruntuleri depoda 00_Kapak/
-klasorunde tutulur, teslim ZIP'ine konmaz. ZIP icerigi yukaridaki yedi ogeden
-olusur.
+Raporun ve UML'nin üreteç betikleri ile ekran görüntüleri depoda 00_Kapak/
+klasöründe tutulur, teslim ZIP'ine konmaz. ZIP içeriği yukarıdaki yedi ögeden
+oluşur.
 
 ------------------------------------------------------------------------
-7. GITHUB DEPOSU (herkese acik)
+7. KODLAMA
+------------------------------------------------------------------------
+Kaynak dosyalar ASCII tutulmuştur, böylece bölge ayarı ve konsol kodlaması
+farklı olan makinelerde derleme ve çıktı bozulmaz. Veri dosyaları UTF-8
+kodludur. Belgeler tam Türkçe karakter kullanır.
+
+------------------------------------------------------------------------
+8. GITHUB DEPOSU
 ------------------------------------------------------------------------
 https://github.com/gecekargosu/blg203-hastane-sira
 
-Depoda kaynak kodun commit gecmisi, rapor ve UML dosyasi bulunur.
-Hoca kontrol icin dogrudan bu baglantidan inceleyebilir.
+Depoya herkes erişebilir. Depoda kaynak kodun commit geçmişi, rapor ve UML
+dosyası bulunur.
 
 ------------------------------------------------------------------------
-8. DEMO VIDEOSU
+9. DEMO VİDEOSU
 ------------------------------------------------------------------------
-Final tesliminde eklenecek 5-8 dakikalik ekran kaydi bagi:
-(baglanti final tesliminden once buraya yazilacak)
+Final tesliminde eklenecek 5-8 dakikalık ekran kaydı bağlantısı:
+(bağlantı final tesliminden önce buraya yazılacak)
