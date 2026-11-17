@@ -908,6 +908,21 @@ def sayfa_bul(ham, basliklar):
     return sonuc
 
 
+def kunye_temizle(yol):
+    """PDF kunyesini bosaltir, uretim araci bilgisi dosyada kalmaz."""
+    okuyucu = pypdf.PdfReader(yol)
+    yazici = pypdf.PdfWriter()
+    for sayfa in okuyucu.pages:
+        yazici.add_page(sayfa)
+    bilgi = yazici._info.get_object()
+    for anahtar in list(bilgi.keys()):
+        del bilgi[anahtar]
+    gecici = str(yol) + ".tmp"
+    with open(gecici, "wb") as dosya:
+        yazici.write(dosya)
+    os.replace(gecici, yol)
+
+
 def rapor_uret():
     veri = olcum_tablosu()
     temel = html_uret(veri)
@@ -925,6 +940,7 @@ def rapor_uret():
         raise SystemExit("HATA: icindekiler sayfa numaralari kararli degil")
 
     altbilgi_bas(ham, HEDEF_PDF)
+    kunye_temizle(HEDEF_PDF)
     print("rapor yazildi:", HEDEF_PDF, "|", len(dogrulama), "baslik")
 
 
